@@ -8,3 +8,10 @@
 - 安装 Git
 - 创建虚拟环境
 - 跑通第一个 Python 文件
+
+## Day 2
+- 复习 Python 基础类型
+- 练习字符串、列表、字典
+- 练习 if / for / while
+- 写函数和综合小练习
+- 产出 day2_practice.py
