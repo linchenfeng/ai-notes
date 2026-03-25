@@ -1,0 +1,3 @@
+My name is charon.
+I am a frontend developer.
+I want to become an LLM developer.

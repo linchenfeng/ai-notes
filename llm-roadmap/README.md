@@ -15,3 +15,10 @@
 - 练习 if / for / while
 - 写函数和综合小练习
 - 产出 day2_practice.py
+
+## Day 3
+- 学模块和 import
+- 学 try / except
+- 学文本文件和 JSON 读写
+- 把代码拆成更像小项目的结构
+- 产出 utils.py 和 day3_practice.py

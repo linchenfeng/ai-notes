@@ -1,0 +1,2 @@
+Today I started learning Python modules and file operations.
+I also learned try-except and JSON today.
