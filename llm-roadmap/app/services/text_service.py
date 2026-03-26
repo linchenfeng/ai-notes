@@ -1,8 +1,4 @@
-﻿"""Day 7/8/9/10 业务层函数集合。"""
-
-
-def summarize_text(text: str):
-    """模拟文本总结逻辑。"""
+﻿def summarize_text(text: str):
     text = text.strip()
     if not text:
         return "文本为空，无法总结。"
@@ -10,7 +6,6 @@ def summarize_text(text: str):
 
 
 def rewrite_text(text: str, style: str):
-    """模拟按指定风格改写文本。"""
     text = text.strip()
     if not text:
         return "文本为空，无法改写。"
@@ -18,7 +13,6 @@ def rewrite_text(text: str, style: str):
 
 
 def extract_keywords(text: str):
-    """用简单规则模拟关键词提取。"""
     text = text.strip()
     if not text:
         return []
@@ -27,25 +21,13 @@ def extract_keywords(text: str):
 
 
 def count_words(text: str):
-    """统计输入文本的单词数。"""
     text = text.strip()
     if not text:
         return 0
     return len(text.split())
 
 
-def uppercase_text(text: str):
-    """返回文本的大写版本。"""
-    return text.strip().upper()
-
-
-def analyze_profile(name: str, role: str, target: str):
-    """根据用户背景返回一段简短分析。"""
-    return f"{name} 当前是 {role}，目标是 {target}，适合从 AI 应用开发方向切入。"
-
-
 def translate_text(text: str, target_language: str):
-    """模拟翻译文本。"""
     text = text.strip()
     if not text:
         return "文本为空，无法翻译。"
@@ -53,7 +35,6 @@ def translate_text(text: str, target_language: str):
 
 
 def analyze_sentiment(text: str):
-    """用简单规则模拟情感分析。"""
     text = text.strip()
     if "好" in text or "喜欢" in text:
         return "positive"
@@ -62,11 +43,5 @@ def analyze_sentiment(text: str):
     return "neutral"
 
 
-def get_mock_post(post_id: int):
-    """模拟按 ID 查询文章。"""
-    posts = {
-        1: {"id": 1, "title": "Python Basics"},
-        2: {"id": 2, "title": "FastAPI Intro"},
-        3: {"id": 3, "title": "LLM Roadmap"},
-    }
-    return posts.get(post_id)
+def uppercase_text(text: str):
+    return text.strip().upper()

@@ -1,44 +1,50 @@
-# Day 14 学习笔记
+﻿# Day 14 学习笔记
 
-- 日期：2026-04-07（周二）
+- 日期：2026-03-26（周四）
 - 周次：第 2 周
-- 本周主题：先调通 LLM，再补 Prompt
-- 阶段：第 1 阶段：先跑通最小闭环
-- 阶段目标：先会 Python 最小开发、会调模型 API、会做一个最简单的 AI 工具。
+- 主题：最小多轮聊天后端（Ollama 版）
+- 阶段：从单轮调用升级到可持续对话
 
 ## 今日学习主题
-阶段复盘
+在后端维护最小会话状态，用 `session_id` 将多轮请求串起来，让第二轮回答能够延续第一轮上下文。
 
 ## 今日任务
-把 Day 8～13 的代码整理成一个 AI 文本助手。
+- 新增 `LLMChatRequest`、`LLMChatResponse`
+- 在 service 层新增会话内存存储与 `chat_with_llm`
+- 新增 `/llm/chat` 与 `/llm/reset-session`
+- 补充 `/llm/chat-once` 便于对比
+- 完成同 session 多轮 + reset + 新 session 测试
 
 ## 今日产出
-第一个可运行的 AI 小工具。
-
-## 建议学习节奏
-- 学新知识 40～60 分钟
-- 写代码 60～90 分钟
-- 复盘记录 15～20 分钟
+- `llm-roadmap/app/schemas/llm.py`
+- `llm-roadmap/app/services/llm_service.py`
+- `llm-roadmap/app/routers/llm.py`
+- `llm-roadmap/notes/day14.md`
 
 ## 完成记录
-- 完成时间：
-- 实际投入：
+- 完成时间：已完成代码与接口验证
+- 实际投入：约 2.5~3 小时
 - 遇到的问题：
+  - 本地模型没有 `previous_response_id` 参数
 - 解决方式：
+  - 用最小 transcript 方式拼接历史，先跑通多轮概念闭环
 
 ## 今日代码 / 笔记链接
-- 代码文件：
-- 相关截图：
-- 延伸阅读：
+- 聊天路由：`llm-roadmap/app/routers/llm.py`
+- 聊天服务：`llm-roadmap/app/services/llm_service.py`
+- 文档地址：`http://127.0.0.1:8000/docs`
 
 ## 复盘
 - 今天学到了什么：
+  - 多轮聊天本质是上下文连续性
+  - `session_id` 是会话识别键
+  - reset 会清空会话状态并使对话重新开始
 - 还没弄懂什么：
+  - 生产级会话存储（Redis/DB）的设计
+  - 多并发下会话隔离与过期策略
 - 明天开始前要准备什么：
+  - 学习 prompt 设计
+  - 尝试结构化输出与格式约束
 
 ## 与 90 天目标的关系
-这一天的任务会服务于你的最终作品集，目标是在 90 天结束时至少拿出下面 3 个项目中的 2～3 个：
-
-- AI 文案/总结助手
-- RAG 知识库助手
-- 工具/数据库问答助手
+Day 14 让项目从“会调用模型”升级为“会管理会话”，这是聊天助手、RAG 对话、Agent 场景的关键基础。
