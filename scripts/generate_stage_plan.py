@@ -17,7 +17,7 @@ class DayPlan:
 
 
 STAGES = [
-    {"slug": "stage1", "title": "第 1 阶段：先跑通最小闭环", "days": (1, 14), "goal": "先会 Python 最小开发、会调模型 API、会做一个最简单的 AI 工具。"},
+    {"slug": "stage1", "title": "第 1 阶段：先跑通最小闭环", "days": (1, 14), "goal": "先会 Python 最小开发、会用 Ollama 调本地 Qwen、会做一个最简单的 AI 工具。"},
     {"slug": "stage2", "title": "第 2 阶段：先做出第一个全栈小项目", "days": (15, 28), "goal": "尽快把你的前端优势接进来，做一个有界面的 AI 应用。"},
     {"slug": "stage3", "title": "第 3 阶段：进入最重要的能力——RAG", "days": (29, 49), "goal": "学会做知识库问答，这是初学者最值得投入的主线。"},
     {"slug": "stage4", "title": "第 4 阶段：评测与优化", "days": (50, 63), "goal": "从“能跑”升级到“更准、更稳”。"},
@@ -33,7 +33,7 @@ DAILY_RHYTHM = [
 ]
 
 PROJECTS = [
-    "AI 文案/总结助手：体现 API 调用、Prompt、结构化输出、前后端联调",
+    "AI 文案/总结助手：体现本地模型调用、Prompt、结构化输出、前后端联调",
     "RAG 知识库助手：体现 Embedding、检索、引用、评测、优化",
     "工具/数据库问答助手：体现 tool calling、SQL、业务系统接入、工程能力",
 ]
@@ -46,17 +46,17 @@ PLANS = [
     DayPlan(5, "学习 HTTP 请求、状态码、GET/POST、超时。", "用 requests 或 httpx 调一个公开 API。", "http_demo.py。"),
     DayPlan(6, "学习 FastAPI：路由、请求参数、返回 JSON。", "做一个 /ping 和 /echo 接口。", "可运行的本地服务。"),
     DayPlan(7, "复盘。", "写《我作为前端，为什么要先学 Python/FastAPI》。", "1 篇 Markdown 笔记。"),
-    DayPlan(8, "注册并配置一个模型 API 平台。", "拿到 Key，写第一次调用。", "hello_llm.py。"),
-    DayPlan(9, "学习消息格式、system prompt、user prompt。", "做一个“文本润色器”。", "CLI 版小工具。"),
+    DayPlan(8, "安装并配置 Ollama，拉取本地 Qwen 模型。", "跑通第一次本地模型调用。", "hello_qwen.py。"),
+    DayPlan(9, "学习 Ollama 聊天消息格式、system prompt、user prompt。", "做一个“文本润色器”。", "CLI 版小工具。"),
     DayPlan(10, "学习 temperature、max tokens、基本参数。", "测试同一任务不同参数的效果差异。", "参数实验记录。"),
     DayPlan(11, "学习结构化输出的概念。", "让模型把文本转成固定 JSON。", "extract_to_json.py。"),
     DayPlan(12, "学习 Prompt 的基本写法：角色、目标、限制、输出格式。", "给“文章总结”写 3 版 prompt。", "prompt_compare.md。"),
     DayPlan(13, "学习对话历史管理。", "做一个带 3 轮上下文的聊天脚本。", "chat_memory_demo.py。"),
-    DayPlan(14, "阶段复盘。", "把 Day 8～13 的代码整理成一个“AI 文本助手”。", "你第一个可运行的 AI 小工具。"),
+    DayPlan(14, "阶段复盘。", "把 Day 8～13 的代码整理成一个“本地 AI 文本助手”。", "你第一个可运行的本地 AI 小工具。"),
     DayPlan(15, "确定项目题目。", "从 AI 文案助手、AI 总结助手、AI 翻译润色助手中选 1 个；写需求清单。", "项目说明文档。"),
     DayPlan(16, "设计前后端结构：前端 React/Next.js，后端 FastAPI。", "画简单架构图。", "项目目录设计。"),
     DayPlan(17, "搭建前端页面：输入框、按钮、结果区。", "先用 mock 数据打通界面。", "前端初版页面。"),
-    DayPlan(18, "后端接入真实 LLM 接口。", "做一个 /generate 接口。", "后端初版。"),
+    DayPlan(18, "后端接入本地 Qwen 接口。", "做一个 /generate 接口。", "后端初版。"),
     DayPlan(19, "前后端联调。", "页面输入内容后能拿到模型输出。", "第一个 AI Web 应用可用。"),
     DayPlan(20, "优化输出体验：loading、错误提示、复制按钮。", "做基础 UX 优化。", "更完整的界面。"),
     DayPlan(21, "复盘。", "写项目 README，截图保存。", "项目 v1。"),
@@ -242,6 +242,12 @@ def build_examples(plan: DayPlan) -> list[str]:
     title = plan.title.lower()
     task = plan.task.lower()
 
+    if "ollama" in title or "qwen" in title or "ollama" in task or "qwen" in task:
+        return [
+            "本地模型调用示例：最低标准应该是你已经在本机启动了 Ollama，且能通过 Python 成功请求一次本地 Qwen，而不是只完成安装截图。",
+            "例如：先跑通一个最小脚本，向 `http://localhost:11434/api/chat` 或 `http://localhost:11434/api/generate` 发请求，确认能拿到模型返回内容。",
+        ]
+
     if deliverable.endswith(".py。") or deliverable.endswith(".py"):
         filename = plan.deliverable.rstrip("。")
         return [
@@ -298,6 +304,35 @@ def build_example_snippet(plan: DayPlan) -> str:
     lower_deliverable = deliverable.lower()
     lower_title = plan.title.lower()
     lower_task = plan.task.lower()
+
+    if "ollama" in lower_title or "qwen" in lower_title or "ollama" in lower_task or "qwen" in lower_task:
+        return """```python
+import requests
+
+
+def main():
+    payload = {
+        "model": "qwen2.5:7b",
+        "messages": [
+            {"role": "system", "content": "你是一个简洁的中文助手。"},
+            {"role": "user", "content": "请用一句话介绍 Python。"},
+        ],
+        "stream": False,
+    }
+
+    response = requests.post(
+        "http://localhost:11434/api/chat",
+        json=payload,
+        timeout=60,
+    )
+    response.raise_for_status()
+    data = response.json()
+    print(data["message"]["content"])
+
+
+if __name__ == "__main__":
+    main()
+```"""
 
     if deliverable.endswith(".py"):
         if "api" in lower_title or "fastapi" in lower_title or "接口" in plan.task:
@@ -522,7 +557,7 @@ def root_readme() -> str:
     lines = [
         "# 90 天 AI 学习计划",
         "",
-        "这是一版更适合初学者的 90 天学习路线，核心顺序是：先会调模型 → 先做小应用 → 再理解理论 → 再做 RAG → 再做工具和 Agent → 最后做部署和作品集。",
+        "这是一版更适合初学者的 90 天学习路线，核心顺序是：先会调用本地模型 → 先做小应用 → 再理解理论 → 再做 RAG → 再做工具和 Agent → 最后做部署和作品集。",
         "",
         "## 学习假设",
         "",

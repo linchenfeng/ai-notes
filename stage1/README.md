@@ -1,7 +1,7 @@
 # 第 1 阶段：先跑通最小闭环
 
 - Day 范围：01～14
-- 阶段目标：先会 Python 最小开发、会调模型 API、会做一个最简单的 AI 工具。
+- 阶段目标：先会 Python 最小开发、会用 Ollama 调本地 Qwen、会做一个最简单的 AI 工具。
 
 ## 阶段日程
 - [Day 01](day01.md)：安装 Python、VS Code、Git、创建虚拟环境。
@@ -25,10 +25,10 @@
 - [Day 07](day07.md)：复盘。
   任务：写《我作为前端，为什么要先学 Python/FastAPI》。
   产出：1 篇 Markdown 笔记。
-- [Day 08](day08.md)：注册并配置一个模型 API 平台。
-  任务：拿到 Key，写第一次调用。
-  产出：hello_llm.py。
-- [Day 09](day09.md)：学习消息格式、system prompt、user prompt。
+- [Day 08](day08.md)：安装并配置 Ollama，拉取本地 Qwen 模型。
+  任务：跑通第一次本地模型调用。
+  产出：hello_qwen.py。
+- [Day 09](day09.md)：学习 Ollama 聊天消息格式、system prompt、user prompt。
   任务：做一个“文本润色器”。
   产出：CLI 版小工具。
 - [Day 10](day10.md)：学习 temperature、max tokens、基本参数。
@@ -44,5 +44,5 @@
   任务：做一个带 3 轮上下文的聊天脚本。
   产出：chat_memory_demo.py。
 - [Day 14](day14.md)：阶段复盘。
-  任务：把 Day 8～13 的代码整理成一个“AI 文本助手”。
-  产出：你第一个可运行的 AI 小工具。
+  任务：把 Day 8～13 的代码整理成一个“本地 AI 文本助手”。
+  产出：你第一个可运行的本地 AI 小工具。

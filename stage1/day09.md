@@ -1,10 +1,10 @@
 # Day 09
 
 - 阶段：第 1 阶段：先跑通最小闭环
-- 阶段目标：先会 Python 最小开发、会调模型 API、会做一个最简单的 AI 工具。
+- 阶段目标：先会 Python 最小开发、会用 Ollama 调本地 Qwen、会做一个最简单的 AI 工具。
 
 ## 今日主题
-学习消息格式、system prompt、user prompt。
+学习 Ollama 聊天消息格式、system prompt、user prompt。
 
 ## 今日任务
 做一个“文本润色器”。
@@ -13,19 +13,19 @@
 CLI 版小工具。
 
 ## Day 09 学习目标
-- 理解今天的核心主题：学习消息格式、system prompt、user prompt
+- 理解今天的核心主题：学习 Ollama 聊天消息格式、system prompt、user prompt
 - 完成原始大纲里的主任务：做一个“文本润色器”
 - 做出今天要求的产出：CLI 版小工具
 - 能用一句话说清楚今天这一步会在后面的哪个项目里派上用场
 
 ## 学习目标详细说明
-- 第一层目标：先真正看懂“学习消息格式、system prompt、user prompt”在当前阶段里的作用，不是死记概念，而是知道它为什么会出现在“先会 Python 最小开发、会调模型 API、会做一个最简单的 AI 工具。”这条主线上。
+- 第一层目标：先真正看懂“学习 Ollama 聊天消息格式、system prompt、user prompt”在当前阶段里的作用，不是死记概念，而是知道它为什么会出现在“先会 Python 最小开发、会用 Ollama 调本地 Qwen、会做一个最简单的 AI 工具。”这条主线上。
 - 第二层目标：把今天的大纲任务“做一个“文本润色器””落到实际动作上，也就是你今天结束前必须亲手完成，而不是只停留在阅读或理解。
 - 第三层目标：把结果沉淀成“CLI 版小工具”这样的可见产出，这样你后面回看时能明确知道自己当时做到了哪一步。
 - 第四层目标：建立项目视角。你不仅要知道今天做了什么，还要知道它以后会接到哪个更大的模块、项目或作品集里。
 
 ## 今天为什么学这个
-今天这一步是在为“先会 Python 最小开发、会调模型 API、会做一个最简单的 AI 工具。”打地基，重点不是一次学完，而是把「学习消息格式、system prompt、user prompt」真正落到代码和可见结果上。
+今天这一步是在为“先会 Python 最小开发、会用 Ollama 调本地 Qwen、会做一个最简单的 AI 工具。”打地基，重点不是一次学完，而是把「学习 Ollama 聊天消息格式、system prompt、user prompt」真正落到代码和可见结果上。
 
 ## 今日时间安排
 
@@ -37,18 +37,18 @@ CLI 版小工具。
 - 复盘记录 15～20 分钟
 
 ## 建议执行步骤
-- 先花 10～15 分钟明确今天只做一件核心事：学习消息格式、system prompt、user prompt。
+- 先花 10～15 分钟明确今天只做一件核心事：学习 Ollama 聊天消息格式、system prompt、user prompt。
 - 按照原始大纲完成主任务：做一个“文本润色器”。
 - 把结果落成一个明确产出：CLI 版小工具，不要只停留在“看懂”。
-- 最后回到阶段目标，检查今天这一步是否真的在推进：先会 Python 最小开发、会调模型 API、会做一个最简单的 AI 工具。
+- 最后回到阶段目标，检查今天这一步是否真的在推进：先会 Python 最小开发、会用 Ollama 调本地 Qwen、会做一个最简单的 AI 工具。
 
 ## 第一阶段：理解今天要做什么
 
 建议时间：15～20 分钟
 
-- 重新读一遍今天的主题：学习消息格式、system prompt、user prompt
+- 重新读一遍今天的主题：学习 Ollama 聊天消息格式、system prompt、user prompt
 - 确认今天真正要交付的东西是：CLI 版小工具
-- 把今天和阶段目标连起来：先会 Python 最小开发、会调模型 API、会做一个最简单的 AI 工具。
+- 把今天和阶段目标连起来：先会 Python 最小开发、会用 Ollama 调本地 Qwen、会做一个最简单的 AI 工具。
 
 ## 第二阶段：完成核心任务
 
@@ -81,12 +81,36 @@ CLI 版小工具。
 - 你留下了可复盘的记录，比如代码、截图、实验结论或 Markdown 笔记。
 
 ## 示例参考
-- 最小示例：围绕今天的任务“做一个“文本润色器””，先做出一个可见结果，再继续细化，不要一开始就把范围做大。
-- 例如：今天结束前，至少要让“CLI 版小工具”处于可展示、可说明、可复盘的状态。
+- 本地模型调用示例：最低标准应该是你已经在本机启动了 Ollama，且能通过 Python 成功请求一次本地 Qwen，而不是只完成安装截图。
+- 例如：先跑通一个最小脚本，向 `http://localhost:11434/api/chat` 或 `http://localhost:11434/api/generate` 发请求，确认能拿到模型返回内容。
 
 ### 示例片段
-```text
-minimum visible result
+```python
+import requests
+
+
+def main():
+    payload = {
+        "model": "qwen2.5:7b",
+        "messages": [
+            {"role": "system", "content": "你是一个简洁的中文助手。"},
+            {"role": "user", "content": "请用一句话介绍 Python。"},
+        ],
+        "stream": False,
+    }
+
+    response = requests.post(
+        "http://localhost:11434/api/chat",
+        json=payload,
+        timeout=60,
+    )
+    response.raise_for_status()
+    data = response.json()
+    print(data["message"]["content"])
+
+
+if __name__ == "__main__":
+    main()
 ```
 
 ## 今天不要偏离的点
@@ -108,4 +132,4 @@ minimum visible result
 - 如果明天继续，你最想先优化哪一个点？
 
 ## 一句话复盘
-我今天完成了「学习消息格式、system prompt、user prompt」这一步，它是在为“先会 Python 最小开发、会调模型 API、会做一个最简单的 AI 工具。”做准备。
+我今天完成了「学习 Ollama 聊天消息格式、system prompt、user prompt」这一步，它是在为“先会 Python 最小开发、会用 Ollama 调本地 Qwen、会做一个最简单的 AI 工具。”做准备。
