@@ -43,3 +43,10 @@
 - 学会启动本地服务并使用 /docs 调试
 - 把脚本升级成可对外访问的 API 服务
 - 产出 day6_api.py
+
+## Day 7
+- 学会拆分接口层和业务层
+- 新建 services.py 封装文本处理逻辑
+- 写多个模拟 AI POST 接口
+- 统一 success / task / result / error 返回结构
+- 产出 day7_api.py
