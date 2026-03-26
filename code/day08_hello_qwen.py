@@ -10,6 +10,9 @@ Day 8：第一次用 Python 调本地 Qwen
 1. Ollama 已经安装完成
 2. 你已经拉取了一个可用的 Qwen 模型，比如：
    ollama pull qwen2.5:0.5b
+
+运行示例：
+python3 code/day08_hello_qwen.py
 """
 
 from __future__ import annotations
@@ -28,7 +31,19 @@ MODEL_NAME = "qwen2.5:0.5b"
 
 
 def build_payload() -> dict:
-    """构造发送给 Ollama 的请求体。"""
+    """
+    构造发送给 Ollama 的请求体。
+
+    这个函数没有入参，因为 Day 8 先固定写死一组最小示例消息，
+    目的只是帮助初学者先跑通“本地模型能被 Python 调起来”这件事。
+
+    返回：
+        dict: 一个符合 Ollama /api/chat 接口格式的 Python 字典。
+        里面包含：
+        - model: 要调用的模型名称
+        - messages: 发给模型的消息列表
+        - stream: 是否使用流式返回
+    """
     return {
         "model": MODEL_NAME,
         # messages 是聊天接口最核心的字段。
@@ -50,7 +65,18 @@ def build_payload() -> dict:
 
 
 def call_ollama(payload: dict) -> dict | None:
-    """向本地 Ollama 发送请求，并返回 JSON 结果。"""
+    """
+    向本地 Ollama 发送请求，并返回 JSON 结果。
+
+    参数：
+        payload: 要发送给 Ollama 的请求体。
+        它应该是一个 Python 字典，通常由 build_payload() 构造出来。
+
+    返回：
+        dict | None:
+        - 请求成功时，返回 Ollama 响应解析后的 Python 字典
+        - 请求失败或 JSON 解析失败时，返回 None
+    """
     # 先把 Python 字典转成 JSON 字符串，再编码成 bytes。
     body = json.dumps(payload).encode("utf-8")
 
@@ -82,7 +108,18 @@ def call_ollama(payload: dict) -> dict | None:
 
 
 def print_result(data: dict | None) -> None:
-    """从 Ollama 返回结果里取出模型回答并打印。"""
+    """
+    从 Ollama 返回结果里取出模型回答并打印。
+
+    参数：
+        data: Ollama 返回的响应数据。
+        - 如果请求成功，通常是一个 Python 字典
+        - 如果请求失败，可能是 None
+
+    返回：
+        None
+        这个函数只负责把结果打印到终端，不返回额外数据。
+    """
     if not data:
         print("没有拿到可用结果。")
         return
@@ -103,7 +140,14 @@ def print_result(data: dict | None) -> None:
 
 
 def main() -> None:
-    """程序入口。"""
+    """
+    程序入口。
+
+    这里串起整个最小调用流程：
+    1. 构造请求体
+    2. 调用本地 Ollama
+    3. 打印模型结果
+    """
     print("开始请求本地 Qwen 模型...")
     payload = build_payload()
     result = call_ollama(payload)
