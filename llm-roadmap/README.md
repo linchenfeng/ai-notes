@@ -36,3 +36,10 @@
 - 学 timeout、raise_for_status() 和异常处理
 - 封装基础 API 调用函数
 - 产出 day5_practice.py
+
+## Day 6
+- 学 FastAPI 和 Uvicorn 的基本用法
+- 写 GET、查询参数、路径参数和 POST 接口
+- 学会启动本地服务并使用 /docs 调试
+- 把脚本升级成可对外访问的 API 服务
+- 产出 day6_api.py
