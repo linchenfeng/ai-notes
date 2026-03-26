@@ -29,3 +29,10 @@
 - 写更实用的数据处理函数
 - 练习 json.dumps() 和 json.loads()
 - 产出 day4_practice.py
+
+## Day 5
+- 学 HTTP 的基本概念
+- 练 GET、POST、params 和 JSON 响应
+- 学 timeout、raise_for_status() 和异常处理
+- 封装基础 API 调用函数
+- 产出 day5_practice.py
