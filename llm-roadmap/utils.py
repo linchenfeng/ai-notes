@@ -1,4 +1,4 @@
-"""Day 3 通用函数模块。"""
+"""Day 3/4 通用函数模块。"""
 
 
 def introduce(name, role):
@@ -30,3 +30,34 @@ def safe_divide(a, b):
         return a / b
     except ZeroDivisionError:
         return "除数不能为 0"
+
+
+def is_frontend(role):
+    """判断一个角色是否属于前端方向。"""
+    return role == "frontend"
+
+
+def get_user_names(users):
+    """从用户列表里提取所有名字。"""
+    names = []
+    for user in users:
+        names.append(user["name"])
+    return names
+
+
+def get_frontend_users(users):
+    """筛选出所有前端用户。"""
+    result = []
+    for user in users:
+        if is_frontend(user["role"]):
+            result.append(user)
+    return result
+
+
+def get_high_score_users(users, min_score):
+    """筛选出分数大于等于指定值的用户。"""
+    result = []
+    for user in users:
+        if user["score"] >= min_score:
+            result.append(user)
+    return result

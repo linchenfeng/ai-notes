@@ -22,3 +22,10 @@
 - 学文本文件和 JSON 读写
 - 把代码拆成更像小项目的结构
 - 产出 utils.py 和 day3_practice.py
+
+## Day 4
+- 强化列表和字典操作
+- 练习列表里套字典的遍历和筛选
+- 写更实用的数据处理函数
+- 练习 json.dumps() 和 json.loads()
+- 产出 day4_practice.py
