@@ -2,24 +2,27 @@
 Day 9：CLI 版文本润色器
 
 这个脚本对应今天的学习目标：
-1. 理解 Ollama 聊天接口里的 messages 结构
+1. 理解阿里百炼聊天接口里的 messages 结构
 2. 理解 system prompt 和 user prompt 的区别
 3. 做出一个可以在终端里使用的文本润色小工具
 
 运行示例：
+source ~/.zshrc
 python3 code/day09_polish_text_cli.py "我最近在学大模型开发，希望表达更专业一点。"
+python3 code/day09_polish_text_cli.py
 """
 
 from __future__ import annotations
 
-import json
 import sys
-from urllib import error, request
 
-
-# 继续沿用本机已经可用的 Qwen 小模型。
-MODEL_NAME = "qwen2.5:0.5b"
-OLLAMA_URL = "http://localhost:11434/api/chat"
+from bailian_client import (
+    DEFAULT_MODEL_NAME,
+    build_chat_payload,
+    call_chat_api,
+    extract_chat_content,
+    get_api_key,
+)
 
 
 def get_input_text() -> str:
@@ -89,59 +92,21 @@ def build_payload(text: str) -> dict:
         最终进入 user prompt。
 
     返回：
-        dict: 一个可直接发送给 Ollama /api/chat 的请求体字典。
+        dict: 一个可直接发送给阿里百炼聊天接口的请求体字典。
     """
-    return {
-        "model": MODEL_NAME,
-        "messages": build_messages(text),
-        # 对初学者来说，先关闭流式输出，更容易理解返回结构。
-        "stream": False,
-        # 这里先不加太多参数，保持最小闭环。
-    }
-
-
-def call_ollama(payload: dict) -> dict | None:
-    """
-    向本地 Ollama 发送请求。
-
-    参数：
-        payload: 要发送给本地模型的请求体。
-        一般是 build_payload() 返回的字典，里面包含 model、messages、stream 等字段。
-
-    返回：
-        dict | None:
-        - 成功时返回模型响应对应的 Python 字典
-        - 失败时返回 None
-    """
-    body = json.dumps(payload).encode("utf-8")
-    http_request = request.Request(
-        OLLAMA_URL,
-        data=body,
-        headers={"Content-Type": "application/json"},
-        method="POST",
+    return build_chat_payload(
+        messages=build_messages(text),
+        model_name=DEFAULT_MODEL_NAME,
+        temperature=0.7,
     )
-
-    try:
-        with request.urlopen(http_request, timeout=60) as response:
-            response_text = response.read().decode("utf-8")
-            return json.loads(response_text)
-    except error.URLError as exc:
-        print("调用本地 Qwen 失败。")
-        print("请检查 Ollama 是否正在运行，以及模型是否已经拉取完成。")
-        print(f"原始错误：{exc}")
-        return None
-    except json.JSONDecodeError as exc:
-        print("模型返回的内容不是合法 JSON。")
-        print(f"原始错误：{exc}")
-        return None
 
 
 def extract_content(data: dict | None) -> str:
     """
-    从 Ollama 返回结果里提取模型生成的文本。
+    从阿里百炼返回结果里提取模型生成的文本。
 
     参数：
-        data: Ollama 返回的响应数据。
+        data: 阿里百炼返回的响应数据。
         如果请求成功，通常会包含 message -> content 这样的结构；
         如果请求失败，这里可能是 None。
 
@@ -150,12 +115,7 @@ def extract_content(data: dict | None) -> str:
         - 成功提取到内容时，返回模型生成的文本
         - 没有提取到内容时，返回空字符串
     """
-    if not data:
-        return ""
-
-    message = data.get("message", {})
-    content = message.get("content", "")
-    return content.strip()
+    return extract_chat_content(data)
 
 
 def print_result(original_text: str, polished_text: str) -> None:
@@ -187,7 +147,7 @@ def main() -> None:
     主流程如下：
     1. 获取用户输入
     2. 校验输入是否为空
-    3. 构造请求体并调用本地模型
+    3. 构造请求体并调用阿里百炼云端模型
     4. 提取并打印润色结果
     """
     original_text = get_input_text()
@@ -196,8 +156,14 @@ def main() -> None:
         print("输入不能为空，请重新运行脚本并提供一段文本。")
         return
 
+    api_key = get_api_key()
+    if not api_key:
+        print("没有读取到 DASHSCOPE_API_KEY。")
+        print("请先执行：source ~/.zshrc")
+        return
+
     payload = build_payload(original_text)
-    result = call_ollama(payload)
+    result = call_chat_api(api_key, payload)
     polished_text = extract_content(result)
     print_result(original_text, polished_text)
 

@@ -1,157 +1,125 @@
 """
-Day 8：第一次用 Python 调本地 Qwen
+Day 8：第一次用 Python 调云端 Qwen
 
 这个脚本的目标很简单：
-1. 向本地运行的 Ollama 发送一条消息
-2. 让本地 Qwen 模型返回一句回答
+1. 学会使用阿里百炼 API Key 调用云端 Qwen
+2. 让云端 Qwen 返回一句回答
 3. 把结果打印到终端
 
 运行前请先确认两件事：
-1. Ollama 已经安装完成
-2. 你已经拉取了一个可用的 Qwen 模型，比如：
-   ollama pull qwen2.5:0.5b
+1. 你已经在阿里百炼控制台创建了 API Key
+2. 你已经在环境变量里配置了 DASHSCOPE_API_KEY
 
 运行示例：
+source ~/.zshrc
 python3 code/day08_hello_qwen.py
 """
 
 from __future__ import annotations
 
 import json
-from urllib import error, request
+
+from bailian_client import (
+    DEFAULT_MODEL_NAME,
+    build_chat_payload,
+    call_chat_api,
+    extract_chat_content,
+    get_api_key,
+)
 
 
-# 这里填写 Ollama 在本机提供服务的地址。
-# 默认情况下，Ollama 的 HTTP 服务就是这个地址。
-OLLAMA_URL = "http://localhost:11434/api/chat"
+def build_messages() -> list[dict[str, str]]:
+    """
+    构造发送给云端 Qwen 的消息列表。
 
-# 这里填写要调用的模型名称。
-# 我这里默认用本机已经存在的 qwen2.5:0.5b，这样脚本能直接跑起来。
-MODEL_NAME = "qwen2.5:0.5b"
+    参数：
+        无。
+        Day 8 先固定写死最小示例消息，目的是帮助初学者先跑通第一次线上调用。
+
+    返回：
+        list[dict[str, str]]:
+        一个符合聊天接口格式的消息列表。
+        每一项都包含：
+        - role: 消息角色，比如 system 或 user
+        - content: 对应消息的文本内容
+    """
+    return [
+        {
+            "role": "system",
+            "content": "你是一个简洁、友好的中文学习助手。",
+        },
+        {
+            "role": "user",
+            "content": "请用三句话向初学者介绍 Python 为什么适合学习 LLM 开发。",
+        },
+    ]
 
 
 def build_payload() -> dict:
     """
-    构造发送给 Ollama 的请求体。
-
-    这个函数没有入参，因为 Day 8 先固定写死一组最小示例消息，
-    目的只是帮助初学者先跑通“本地模型能被 Python 调起来”这件事。
-
-    返回：
-        dict: 一个符合 Ollama /api/chat 接口格式的 Python 字典。
-        里面包含：
-        - model: 要调用的模型名称
-        - messages: 发给模型的消息列表
-        - stream: 是否使用流式返回
-    """
-    return {
-        "model": MODEL_NAME,
-        # messages 是聊天接口最核心的字段。
-        # 它是一个列表，里面每一项都是一条消息。
-        "messages": [
-            {
-                "role": "system",
-                "content": "你是一个简洁、友好的中文学习助手。",
-            },
-            {
-                "role": "user",
-                "content": "请用三句话向初学者介绍 Python 为什么适合学习 LLM 开发。",
-            },
-        ],
-        # stream=False 表示等模型一次性生成完整结果后再返回。
-        # 对初学者来说，这样最容易看懂返回数据结构。
-        "stream": False,
-    }
-
-
-def call_ollama(payload: dict) -> dict | None:
-    """
-    向本地 Ollama 发送请求，并返回 JSON 结果。
+    构造发送给阿里百炼的请求体。
 
     参数：
-        payload: 要发送给 Ollama 的请求体。
-        它应该是一个 Python 字典，通常由 build_payload() 构造出来。
+        无。
+        这个函数会直接组合模型名称、消息列表和基础参数。
 
     返回：
-        dict | None:
-        - 请求成功时，返回 Ollama 响应解析后的 Python 字典
-        - 请求失败或 JSON 解析失败时，返回 None
+        dict:
+        一个可直接发送给阿里百炼聊天接口的 Python 字典。
     """
-    # 先把 Python 字典转成 JSON 字符串，再编码成 bytes。
-    body = json.dumps(payload).encode("utf-8")
-
-    # Content-Type 告诉服务端：我发送的是 JSON。
-    http_request = request.Request(
-        OLLAMA_URL,
-        data=body,
-        headers={"Content-Type": "application/json"},
-        method="POST",
+    return build_chat_payload(
+        messages=build_messages(),
+        model_name=DEFAULT_MODEL_NAME,
+        temperature=0.7,
     )
 
-    try:
-        # timeout 可以避免服务长时间无响应时程序一直卡住。
-        with request.urlopen(http_request, timeout=60) as response:
-            response_text = response.read().decode("utf-8")
-            return json.loads(response_text)
-    except error.URLError as exc:
-        print("请求本地 Ollama 失败。")
-        print("请检查：")
-        print("1. Ollama 服务是否已经启动")
-        print(f"2. 本地地址是否可访问：{OLLAMA_URL}")
-        print(f"3. 模型是否已存在：{MODEL_NAME}")
-        print(f"原始错误：{exc}")
-        return None
-    except json.JSONDecodeError as exc:
-        print("返回结果不是合法的 JSON，无法继续解析。")
-        print(f"原始错误：{exc}")
-        return None
 
-
-def print_result(data: dict | None) -> None:
+def print_result(content: str, raw_data: dict | None) -> None:
     """
-    从 Ollama 返回结果里取出模型回答并打印。
+    打印模型结果。
 
     参数：
-        data: Ollama 返回的响应数据。
-        - 如果请求成功，通常是一个 Python 字典
-        - 如果请求失败，可能是 None
+        content: 已经从返回结果里提取出的模型正文。
+        raw_data: 接口返回的完整原始数据。
+        如果没有成功提取到 content，可以用 raw_data 排查问题。
 
     返回：
         None
-        这个函数只负责把结果打印到终端，不返回额外数据。
+        这个函数只负责把信息打印到终端。
     """
-    if not data:
-        print("没有拿到可用结果。")
+    if content:
+        print("Qwen 的回答：")
+        print(content)
         return
 
-    # Ollama /api/chat 在 stream=False 时，常见结构里会有 message 字段。
-    # message 里面再包含 role 和 content。
-    message = data.get("message", {})
-    content = message.get("content", "").strip()
-
-    if not content:
-        print("接口调用成功，但没有拿到模型内容。")
+    print("接口调用成功，但没有提取到可用内容。")
+    if raw_data:
         print("完整返回数据如下：")
-        print(json.dumps(data, ensure_ascii=False, indent=2))
-        return
-
-    print("Qwen 的回答：")
-    print(content)
+        print(json.dumps(raw_data, ensure_ascii=False, indent=2))
 
 
 def main() -> None:
     """
     程序入口。
 
-    这里串起整个最小调用流程：
-    1. 构造请求体
-    2. 调用本地 Ollama
-    3. 打印模型结果
+    主流程如下：
+    1. 读取 API Key
+    2. 构造请求体
+    3. 调用阿里百炼云端模型
+    4. 提取并打印模型回答
     """
-    print("开始请求本地 Qwen 模型...")
+    api_key = get_api_key()
+    if not api_key:
+        print("没有读取到 DASHSCOPE_API_KEY。")
+        print("请先在终端里配置环境变量，例如：")
+        print('export DASHSCOPE_API_KEY="sk-你的百炼密钥"')
+        return
+
+    print("开始请求阿里百炼云端 Qwen 模型...")
     payload = build_payload()
-    result = call_ollama(payload)
-    print_result(result)
+    raw_data = call_chat_api(api_key, payload)
+    content = extract_chat_content(raw_data)
+    print_result(content, raw_data)
 
 
 if __name__ == "__main__":
