@@ -17,7 +17,9 @@ uvicorn backend.day18_main:app --reload --port 8000
 from __future__ import annotations
 
 import json
+import os
 import socket
+import ssl
 from typing import Literal
 from urllib import error, request
 
@@ -25,9 +27,19 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
+try:
+    import certifi
+except ImportError:
+    certifi = None
 
-OLLAMA_BASE_URL = "http://127.0.0.1:11434"
-DEFAULT_MODEL_NAME = "qwen2.5:0.5b"
+
+REMOTE_API_BASE_URL = os.getenv(
+    "REMOTE_API_BASE_URL", "https://dashscope.aliyuncs.com/compatible-mode/v1"
+).rstrip("/")
+REMOTE_API_KEY = os.getenv("REMOTE_API_KEY", "").strip() or os.getenv(
+    "DASHSCOPE_API_KEY", ""
+).strip()
+DEFAULT_MODEL_NAME = os.getenv("REMOTE_MODEL_NAME", "qwen-turbo")
 
 
 class GenerateRequest(BaseModel):
@@ -64,6 +76,15 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+def create_ssl_context() -> ssl.SSLContext | None:
+    """
+    为 HTTPS 请求创建证书上下文。
+    """
+    if certifi is None:
+        return None
+    return ssl.create_default_context(cafile=certifi.where())
 
 
 def build_summary_prompt(text: str, style: str) -> str:
@@ -106,43 +127,63 @@ def build_summary_prompt(text: str, style: str) -> str:
     )
 
 
-def call_ollama_chat(prompt: str, model_name: str = DEFAULT_MODEL_NAME) -> str:
+def call_remote_chat(
+    prompt: str,
+    model_name: str = DEFAULT_MODEL_NAME,
+    timeout_seconds: int = 120,
+) -> str:
     """
-    调用本地 Ollama /api/chat，返回模型文本。
+    调用远程 OpenAI 兼容聊天接口，返回模型文本。
     """
+    if not REMOTE_API_KEY:
+        raise RuntimeError(
+            "缺少远程 API Key。请配置 REMOTE_API_KEY 或 DASHSCOPE_API_KEY。"
+        )
+
     payload = {
         "model": model_name,
         "messages": [
             {"role": "system", "content": "你是一个可靠的中文总结助手。"},
             {"role": "user", "content": prompt},
         ],
-        "stream": False,
-        "options": {"temperature": 0.3},
+        "temperature": 0.3,
     }
 
-    endpoint = f"{OLLAMA_BASE_URL}/api/chat"
+    endpoint = f"{REMOTE_API_BASE_URL}/chat/completions"
     body = json.dumps(payload).encode("utf-8")
     http_request = request.Request(
         endpoint,
         data=body,
-        headers={"Content-Type": "application/json"},
+        headers={
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {REMOTE_API_KEY}",
+        },
         method="POST",
     )
 
     try:
-        with request.urlopen(http_request, timeout=300) as response:
+        with request.urlopen(
+            http_request,
+            timeout=timeout_seconds,
+            context=create_ssl_context(),
+        ) as response:
             data = json.loads(response.read().decode("utf-8"))
     except error.HTTPError as exc:
         detail = exc.read().decode("utf-8", errors="ignore")
-        raise RuntimeError(f"Ollama 请求失败：{detail or exc.reason}") from exc
+        raise RuntimeError(f"远程 API 请求失败：{detail or exc.reason}") from exc
     except error.URLError as exc:
-        raise RuntimeError("无法连接本地 Ollama 服务，请先确认 Ollama 已启动。") from exc
+        raise RuntimeError(
+            f"无法连接远程 API，请检查网络或 API 地址配置。原始错误：{exc}"
+        ) from exc
     except (TimeoutError, socket.timeout) as exc:
-        raise RuntimeError("请求本地模型超时，请稍后再试。") from exc
+        raise RuntimeError(f"请求模型超时（{model_name}）。") from exc
     except json.JSONDecodeError as exc:
-        raise RuntimeError("Ollama 返回结果不是合法 JSON。") from exc
+        raise RuntimeError("远程 API 返回结果不是合法 JSON。") from exc
 
-    content = data.get("message", {}).get("content", "").strip()
+    choices = data.get("choices", [])
+    content = ""
+    if choices:
+        content = choices[0].get("message", {}).get("content", "").strip()
     if not content:
         raise RuntimeError("模型返回为空。")
     return content
@@ -186,8 +227,13 @@ def generate(payload: GenerateRequest) -> GenerateResponse:
     prompt = build_summary_prompt(text=text, style=payload.style)
 
     try:
-        summary = call_ollama_chat(prompt=prompt, model_name=DEFAULT_MODEL_NAME)
+        summary = call_remote_chat(
+            prompt=prompt,
+            model_name=DEFAULT_MODEL_NAME,
+            timeout_seconds=90,
+        )
+        used_model = DEFAULT_MODEL_NAME
     except RuntimeError as exc:
         return GenerateResponse(ok=False, style=payload.style, error=str(exc))
 
-    return GenerateResponse(ok=True, summary=summary, style=payload.style)
+    return GenerateResponse(ok=True, summary=summary, style=payload.style, model=used_model)

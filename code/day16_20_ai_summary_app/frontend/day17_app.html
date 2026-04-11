@@ -3,23 +3,24 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Day17-20 AI 总结助手</title>
+    <title>AI 总结助手 · Day17</title>
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
       :root {
-        --bg: #f7f9fc;
-        --panel: #ffffff;
-        --text: #1f2937;
-        --sub: #6b7280;
-        --primary: #2563eb;
-        --primary-hover: #1d4ed8;
-        --border: #dbe3ef;
-        --error-bg: #fef2f2;
-        --error-text: #b91c1c;
-        --ok-bg: #ecfdf5;
-        --ok-text: #065f46;
+        --bg: oklch(0.98 0.01 80);
+        --surface: oklch(0.995 0.002 80);
+        --ink: oklch(0.26 0.02 252);
+        --ink-soft: oklch(0.52 0.01 250);
+        --line: oklch(0.9 0.01 250);
+        --primary: oklch(0.54 0.16 250);
+        --primary-hover: oklch(0.49 0.15 250);
+        --accent: oklch(0.73 0.14 50);
+        --ok-bg: oklch(0.96 0.03 155);
+        --ok-text: oklch(0.42 0.1 155);
+        --error-bg: oklch(0.96 0.03 25);
+        --error-text: oklch(0.52 0.14 25);
       }
 
       * {
@@ -28,187 +29,280 @@
 
       body {
         margin: 0;
-        padding: 0;
-        font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
-        background: radial-gradient(circle at top right, #e0ebff, var(--bg) 48%);
-        color: var(--text);
+        min-height: 100vh;
+        color: var(--ink);
+        font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+        background:
+          radial-gradient(circle at 8% 6%, oklch(0.93 0.04 250) 0 12%, transparent 13%),
+          radial-gradient(circle at 92% 18%, oklch(0.92 0.04 60) 0 13%, transparent 14%),
+          linear-gradient(170deg, oklch(0.98 0.01 80), oklch(0.95 0.02 250));
       }
 
-      .container {
-        max-width: 1000px;
+      .shell {
+        max-width: 1140px;
         margin: 0 auto;
-        padding: 24px 16px 40px;
+        padding: clamp(18px, 4vw, 44px);
       }
 
-      .header {
-        margin-bottom: 18px;
+      .hero {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        align-items: flex-end;
+        margin-bottom: 20px;
       }
 
-      .title {
+      .kicker {
+        display: inline-block;
+        font-size: 12px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--ink-soft);
+        margin-bottom: 10px;
+      }
+
+      h1 {
         margin: 0;
-        font-size: 28px;
+        font-family: "Kaiti SC", "STKaiti", serif;
+        font-size: clamp(2rem, 3.2vw, 3.2rem);
+        line-height: 1.16;
+        letter-spacing: 0.01em;
       }
 
       .subtitle {
-        margin: 8px 0 0;
-        color: var(--sub);
-        line-height: 1.6;
+        margin: 12px 0 0;
+        color: var(--ink-soft);
+        max-width: 68ch;
+        line-height: 1.75;
       }
 
-      .grid {
+      .meta {
+        font-size: 13px;
+        color: var(--ink-soft);
+        white-space: nowrap;
+      }
+
+      .layout {
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 16px;
+        grid-template-columns: minmax(320px, 1.1fr) minmax(280px, 0.9fr);
+        gap: 14px;
       }
 
-      .card {
-        background: var(--panel);
-        border: 1px solid var(--border);
-        border-radius: 14px;
-        padding: 16px;
+      .panel {
+        background: color-mix(in oklch, var(--surface), white 65%);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 14px;
       }
 
-      .label {
-        display: block;
-        font-size: 14px;
-        font-weight: 600;
-        margin-bottom: 8px;
+      .panel h2 {
+        margin: 0;
+        font-size: 1rem;
+        letter-spacing: 0.01em;
+      }
+
+      .helper {
+        margin-top: 4px;
+        color: var(--ink-soft);
+        font-size: 13px;
       }
 
       textarea {
+        margin-top: 12px;
         width: 100%;
-        min-height: 280px;
-        border: 1px solid var(--border);
-        border-radius: 10px;
-        padding: 12px;
+        min-height: 315px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: white;
+        color: var(--ink);
+        padding: 13px 14px;
         resize: vertical;
         font-size: 14px;
-        line-height: 1.7;
+        line-height: 1.75;
+      }
+
+      .toolbar {
+        margin-top: 12px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .counter {
+        margin-left: auto;
+        font-size: 12px;
+        color: var(--ink-soft);
       }
 
       select,
       button {
-        border-radius: 10px;
-        border: 1px solid var(--border);
         height: 40px;
+        border-radius: 10px;
         font-size: 14px;
+        border: 1px solid var(--line);
       }
 
       select {
-        padding: 0 10px;
-        background: #fff;
+        padding: 0 12px;
+        min-width: 124px;
+        background: white;
       }
 
       button {
         padding: 0 14px;
         background: var(--primary);
-        color: #fff;
-        border-color: var(--primary);
+        color: white;
+        border-color: transparent;
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: transform 0.16s ease, background 0.2s ease;
       }
 
       button:hover:enabled {
         background: var(--primary-hover);
+        transform: translateY(-1px);
       }
 
       button:disabled {
-        opacity: 0.65;
+        opacity: 0.6;
         cursor: not-allowed;
       }
 
-      .actions {
-        margin-top: 12px;
+      .ghost {
+        background: white;
+        color: var(--ink);
+        border-color: var(--line);
+      }
+
+      .switch-wrap {
+        margin-top: 10px;
         display: flex;
+        align-items: center;
         gap: 8px;
-        flex-wrap: wrap;
+        color: var(--ink-soft);
+        font-size: 13px;
       }
 
-      .secondary {
-        background: #fff;
-        color: var(--text);
+      .switch {
+        appearance: none;
+        width: 42px;
+        height: 24px;
+        background: oklch(0.87 0.01 250);
+        border-radius: 999px;
+        position: relative;
+        cursor: pointer;
+        transition: background 0.2s ease;
       }
 
-      .result {
-        white-space: pre-wrap;
-        line-height: 1.7;
-        min-height: 280px;
+      .switch::before {
+        content: "";
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 18px;
+        height: 18px;
+        border-radius: 999px;
+        background: white;
+        transition: transform 0.2s ease;
       }
 
-      .badge {
-        display: inline-block;
-        padding: 4px 8px;
+      .switch:checked {
+        background: color-mix(in oklch, var(--primary), white 40%);
+      }
+
+      .switch:checked::before {
+        transform: translateX(18px);
+      }
+
+      .status-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 10px;
         border-radius: 999px;
         font-size: 12px;
         margin-bottom: 10px;
       }
 
-      .error {
-        background: var(--error-bg);
-        color: var(--error-text);
-      }
-
-      .ok {
+      .status-ok {
         background: var(--ok-bg);
         color: var(--ok-text);
       }
 
-      .status {
-        margin-top: 12px;
-        color: var(--sub);
-        font-size: 13px;
+      .status-error {
+        background: var(--error-bg);
+        color: var(--error-text);
       }
 
-      .inline {
+      .output {
+        min-height: 312px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 14px;
+        background: white;
+        white-space: pre-wrap;
+        line-height: 1.75;
+      }
+
+      .output-placeholder {
+        color: var(--ink-soft);
+      }
+
+      .copy-row {
+        margin-top: 12px;
         display: flex;
         gap: 8px;
-        align-items: center;
       }
 
-      .mock {
-        font-size: 13px;
-        color: var(--sub);
+      .tiny {
+        margin-top: 12px;
+        font-size: 12px;
+        color: var(--ink-soft);
       }
 
       @media (max-width: 900px) {
-        .grid {
+        .hero {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 8px;
+        }
+
+        .layout {
           grid-template-columns: 1fr;
         }
 
         textarea,
-        .result {
-          min-height: 220px;
+        .output {
+          min-height: 230px;
         }
       }
     </style>
   </head>
   <body>
     <div id="root"></div>
+
     <script type="text/babel">
       const { useState } = React;
 
       const API_BASE_URL = "http://127.0.0.1:8000";
-      const MOCK_DELAY_MS = 900;
-      const DEFAULT_ARTICLE =
+      const DEFAULT_TEXT =
         "过去一年，我们团队把一个内部数据看板从每周人工汇总升级为实时系统。项目初期最大的问题是需求反复变化，研发和业务对指标定义不一致。我们先用两周统一指标口径，再分三阶段上线：先只做核心指标，再补权限和告警，最后做移动端适配。上线后，业务同学查询数据的平均等待时间从2天降到10分钟。";
 
       function mockGenerate(text, style) {
-        const map = {
-          brief: "这是 mock 简洁版：团队完成了看板实时化升级，并显著缩短了业务查询等待时间。",
+        const demo = {
+          brief: "团队通过统一指标与分阶段上线，把手工看板升级为实时系统，最终将查询等待时间从2天压缩到10分钟。",
           bullets:
-            "- 先统一指标口径\n- 分阶段上线核心能力\n- 查询等待从 2 天降到 10 分钟",
+            "- 先统一指标口径，解决跨团队认知偏差\n- 分阶段上线核心能力，降低改造风险\n- 查询等待时间从 2 天缩短到 10 分钟",
           structured:
-            "背景：看板人工汇总效率低且口径不一致。\n关键动作：统一指标并分三阶段上线。\n结果：查询等待时间大幅下降。",
+            "背景：原看板依赖人工汇总且口径不一致。\n关键动作：统一指标并按三阶段逐步上线。\n结果：查询等待从2天降到10分钟。",
         };
         return new Promise((resolve) => {
-          setTimeout(() => {
-            resolve(map[style] || map.brief);
-          }, MOCK_DELAY_MS);
+          window.setTimeout(() => resolve(demo[style] || demo.brief), 900);
         });
       }
 
       function App() {
-        const [text, setText] = useState(DEFAULT_ARTICLE);
+        const [text, setText] = useState(DEFAULT_TEXT);
         const [style, setStyle] = useState("brief");
         const [result, setResult] = useState("");
         const [loading, setLoading] = useState(false);
@@ -216,11 +310,18 @@
         const [copied, setCopied] = useState(false);
         const [useMock, setUseMock] = useState(false);
 
-        async function handleGenerate() {
+        const count = text.trim().length;
+
+        async function onGenerate() {
           const content = text.trim();
           if (!content) {
             setError("请输入要总结的文本。");
             setResult("");
+            return;
+          }
+
+          if (content.length > 4000) {
+            setError("文本过长，请控制在 4000 字以内。");
             return;
           }
 
@@ -230,8 +331,7 @@
 
           try {
             if (useMock) {
-              const mockResult = await mockGenerate(content, style);
-              setResult(mockResult);
+              setResult(await mockGenerate(content, style));
               return;
             }
 
@@ -259,76 +359,92 @@
           }
         }
 
-        async function handleCopy() {
+        async function onCopy() {
           if (!result) return;
           try {
             await navigator.clipboard.writeText(result);
             setCopied(true);
-            setTimeout(() => setCopied(false), 1500);
+            window.setTimeout(() => setCopied(false), 1400);
           } catch (err) {
             setError("复制失败，请手动复制。");
           }
         }
 
         return (
-          <div className="container">
-            <div className="header">
-              <h1 className="title">AI 总结助手（Day 17~20）</h1>
-              <p className="subtitle">
-                输入文章 -> 选择风格 -> 点击生成。支持 mock 联调、loading、错误提示和一键复制。
-              </p>
-            </div>
+          <main className="shell">
+            <section className="hero">
+              <div>
+                <span className="kicker">Day 17-20 · AI Summary Studio</span>
+                <h1>AI 总结助手</h1>
+                <p className="subtitle">
+                  面向需要快速阅读信息的学生和职场用户。输入原文后可按三种风格生成总结，支持本地后端联调与 mock 演示。
+                </p>
+              </div>
+              <div className="meta">模型默认：qwen2.5:0.5b</div>
+            </section>
 
-            <div className="grid">
-              <section className="card">
-                <label className="label">输入文章</label>
+            <section className="layout">
+              <article className="panel">
+                <h2>输入区</h2>
+                <p className="helper">先粘贴文章，再选择风格生成。</p>
                 <textarea
                   value={text}
                   onChange={(event) => setText(event.target.value)}
-                  placeholder="请输入要总结的文本..."
+                  placeholder="请输入要总结的文章内容..."
                 />
 
-                <div className="actions">
+                <div className="toolbar">
                   <select value={style} onChange={(event) => setStyle(event.target.value)}>
                     <option value="brief">简洁版</option>
                     <option value="bullets">要点版</option>
                     <option value="structured">结构化版</option>
                   </select>
-                  <button onClick={handleGenerate} disabled={loading}>
+                  <button onClick={onGenerate} disabled={loading}>
                     {loading ? "生成中..." : "生成总结"}
                   </button>
+                  <span className="counter">{count} 字</span>
                 </div>
 
-                <div className="status inline">
+                <div className="switch-wrap">
                   <input
                     id="mock-switch"
+                    className="switch"
                     type="checkbox"
                     checked={useMock}
                     onChange={(event) => setUseMock(event.target.checked)}
                   />
-                  <label htmlFor="mock-switch" className="mock">
-                    使用 mock 数据（Day17 演示）
-                  </label>
+                  <label htmlFor="mock-switch">使用 mock 数据（用于 Day17 演示）</label>
                 </div>
-              </section>
+              </article>
 
-              <section className="card">
-                <label className="label">结果区</label>
-                {error && <div className="badge error">错误：{error}</div>}
-                {!error && result && <div className="badge ok">生成成功</div>}
-                {!error && copied && <div className="badge ok">已复制到剪贴板</div>}
-                <div className="result">
-                  {result || (loading ? "正在生成，请稍候..." : "这里会显示总结结果。")}
+              <article className="panel">
+                <h2>结果区</h2>
+                <p className="helper">这里展示模型生成结果与状态反馈。</p>
+
+                {error && <div className="status-chip status-error">错误：{error}</div>}
+                {!error && result && <div className="status-chip status-ok">生成成功</div>}
+                {!error && copied && <div className="status-chip status-ok">已复制到剪贴板</div>}
+
+                <div className="output">
+                  {result ? (
+                    result
+                  ) : loading ? (
+                    "正在生成，请稍候..."
+                  ) : (
+                    <span className="output-placeholder">暂无结果，点击左侧“生成总结”开始。</span>
+                  )}
                 </div>
 
-                <div className="actions">
-                  <button className="secondary" onClick={handleCopy} disabled={!result}>
+                <div className="copy-row">
+                  <button className="ghost" onClick={onCopy} disabled={!result}>
                     复制结果
                   </button>
                 </div>
-              </section>
-            </div>
-          </div>
+
+                <p className="tiny">联调接口：POST {API_BASE_URL}/generate</p>
+              </article>
+            </section>
+          </main>
         );
       }
 

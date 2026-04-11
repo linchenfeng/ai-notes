@@ -1,0 +1,6 @@
+{
+  "python.defaultInterpreterPath": "/Volumes/学习资料/ai-notes/code/day16_20_ai_summary_app/.venv/bin/python",
+  "python.analysis.autoSearchPaths": true,
+  "python.analysis.diagnosticMode": "workspace",
+  "python.terminal.activateEnvironment": true
+}
