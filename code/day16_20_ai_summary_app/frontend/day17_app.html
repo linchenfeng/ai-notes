@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Day17-20 AI 总结助手</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+      :root {
+        --bg: #f7f9fc;
+        --panel: #ffffff;
+        --text: #1f2937;
+        --sub: #6b7280;
+        --primary: #2563eb;
+        --primary-hover: #1d4ed8;
+        --border: #dbe3ef;
+        --error-bg: #fef2f2;
+        --error-text: #b91c1c;
+        --ok-bg: #ecfdf5;
+        --ok-text: #065f46;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+        background: radial-gradient(circle at top right, #e0ebff, var(--bg) 48%);
+        color: var(--text);
+      }
+
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 24px 16px 40px;
+      }
+
+      .header {
+        margin-bottom: 18px;
+      }
+
+      .title {
+        margin: 0;
+        font-size: 28px;
+      }
+
+      .subtitle {
+        margin: 8px 0 0;
+        color: var(--sub);
+        line-height: 1.6;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 16px;
+      }
+
+      .label {
+        display: block;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+
+      textarea {
+        width: 100%;
+        min-height: 280px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 12px;
+        resize: vertical;
+        font-size: 14px;
+        line-height: 1.7;
+      }
+
+      select,
+      button {
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        height: 40px;
+        font-size: 14px;
+      }
+
+      select {
+        padding: 0 10px;
+        background: #fff;
+      }
+
+      button {
+        padding: 0 14px;
+        background: var(--primary);
+        color: #fff;
+        border-color: var(--primary);
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      button:hover:enabled {
+        background: var(--primary-hover);
+      }
+
+      button:disabled {
+        opacity: 0.65;
+        cursor: not-allowed;
+      }
+
+      .actions {
+        margin-top: 12px;
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .secondary {
+        background: #fff;
+        color: var(--text);
+      }
+
+      .result {
+        white-space: pre-wrap;
+        line-height: 1.7;
+        min-height: 280px;
+      }
+
+      .badge {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 999px;
+        font-size: 12px;
+        margin-bottom: 10px;
+      }
+
+      .error {
+        background: var(--error-bg);
+        color: var(--error-text);
+      }
+
+      .ok {
+        background: var(--ok-bg);
+        color: var(--ok-text);
+      }
+
+      .status {
+        margin-top: 12px;
+        color: var(--sub);
+        font-size: 13px;
+      }
+
+      .inline {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .mock {
+        font-size: 13px;
+        color: var(--sub);
+      }
+
+      @media (max-width: 900px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+
+        textarea,
+        .result {
+          min-height: 220px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+      const { useState } = React;
+
+      const API_BASE_URL = "http://127.0.0.1:8000";
+      const MOCK_DELAY_MS = 900;
+      const DEFAULT_ARTICLE =
+        "过去一年，我们团队把一个内部数据看板从每周人工汇总升级为实时系统。项目初期最大的问题是需求反复变化，研发和业务对指标定义不一致。我们先用两周统一指标口径，再分三阶段上线：先只做核心指标，再补权限和告警，最后做移动端适配。上线后，业务同学查询数据的平均等待时间从2天降到10分钟。";
+
+      function mockGenerate(text, style) {
+        const map = {
+          brief: "这是 mock 简洁版：团队完成了看板实时化升级，并显著缩短了业务查询等待时间。",
+          bullets:
+            "- 先统一指标口径\n- 分阶段上线核心能力\n- 查询等待从 2 天降到 10 分钟",
+          structured:
+            "背景：看板人工汇总效率低且口径不一致。\n关键动作：统一指标并分三阶段上线。\n结果：查询等待时间大幅下降。",
+        };
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve(map[style] || map.brief);
+          }, MOCK_DELAY_MS);
+        });
+      }
+
+      function App() {
+        const [text, setText] = useState(DEFAULT_ARTICLE);
+        const [style, setStyle] = useState("brief");
+        const [result, setResult] = useState("");
+        const [loading, setLoading] = useState(false);
+        const [error, setError] = useState("");
+        const [copied, setCopied] = useState(false);
+        const [useMock, setUseMock] = useState(false);
+
+        async function handleGenerate() {
+          const content = text.trim();
+          if (!content) {
+            setError("请输入要总结的文本。");
+            setResult("");
+            return;
+          }
+
+          setLoading(true);
+          setError("");
+          setCopied(false);
+
+          try {
+            if (useMock) {
+              const mockResult = await mockGenerate(content, style);
+              setResult(mockResult);
+              return;
+            }
+
+            const response = await fetch(`${API_BASE_URL}/generate`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ text: content, style }),
+            });
+
+            if (!response.ok) {
+              throw new Error(`请求失败（HTTP ${response.status}）`);
+            }
+
+            const data = await response.json();
+            if (!data.ok) {
+              throw new Error(data.error || "后端返回失败。");
+            }
+
+            setResult(data.summary || "");
+          } catch (err) {
+            setError(err.message || "请求失败，请稍后重试。");
+            setResult("");
+          } finally {
+            setLoading(false);
+          }
+        }
+
+        async function handleCopy() {
+          if (!result) return;
+          try {
+            await navigator.clipboard.writeText(result);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 1500);
+          } catch (err) {
+            setError("复制失败，请手动复制。");
+          }
+        }
+
+        return (
+          <div className="container">
+            <div className="header">
+              <h1 className="title">AI 总结助手（Day 17~20）</h1>
+              <p className="subtitle">
+                输入文章 -> 选择风格 -> 点击生成。支持 mock 联调、loading、错误提示和一键复制。
+              </p>
+            </div>
+
+            <div className="grid">
+              <section className="card">
+                <label className="label">输入文章</label>
+                <textarea
+                  value={text}
+                  onChange={(event) => setText(event.target.value)}
+                  placeholder="请输入要总结的文本..."
+                />
+
+                <div className="actions">
+                  <select value={style} onChange={(event) => setStyle(event.target.value)}>
+                    <option value="brief">简洁版</option>
+                    <option value="bullets">要点版</option>
+                    <option value="structured">结构化版</option>
+                  </select>
+                  <button onClick={handleGenerate} disabled={loading}>
+                    {loading ? "生成中..." : "生成总结"}
+                  </button>
+                </div>
+
+                <div className="status inline">
+                  <input
+                    id="mock-switch"
+                    type="checkbox"
+                    checked={useMock}
+                    onChange={(event) => setUseMock(event.target.checked)}
+                  />
+                  <label htmlFor="mock-switch" className="mock">
+                    使用 mock 数据（Day17 演示）
+                  </label>
+                </div>
+              </section>
+
+              <section className="card">
+                <label className="label">结果区</label>
+                {error && <div className="badge error">错误：{error}</div>}
+                {!error && result && <div className="badge ok">生成成功</div>}
+                {!error && copied && <div className="badge ok">已复制到剪贴板</div>}
+                <div className="result">
+                  {result || (loading ? "正在生成，请稍候..." : "这里会显示总结结果。")}
+                </div>
+
+                <div className="actions">
+                  <button className="secondary" onClick={handleCopy} disabled={!result}>
+                    复制结果
+                  </button>
+                </div>
+              </section>
+            </div>
+          </div>
+        );
+      }
+
+      ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+    </script>
+  </body>
+</html>
