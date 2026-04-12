@@ -1,0 +1,22 @@
+{
+  "index_name": "day38_local_search_index",
+  "backend": "local_file_index",
+  "docs_dir": "/Volumes/学习资料/ai-notes/code/docs",
+  "chunk_source_script": "/Volumes/学习资料/ai-notes/code/day34_split_docs.py",
+  "chunks_file": "/Volumes/学习资料/ai-notes/code/day36_local_index/chunks.json",
+  "embeddings_file": "/Volumes/学习资料/ai-notes/code/day36_local_index/embeddings.json",
+  "search_results_file": "/Volumes/学习资料/ai-notes/code/day36_local_index/search_results.json",
+  "status": {
+    "chunks_ready": true,
+    "embeddings_ready": true,
+    "index_ready": true
+  },
+  "embedding_model": "local_hash_embedding_v1",
+  "embedding_dim": 64,
+  "stats": {
+    "chunk_count": 24,
+    "embedding_count": 24,
+    "index_entry_count": 24
+  },
+  "index_file": "/Volumes/学习资料/ai-notes/code/day36_local_index/index.json"
+}

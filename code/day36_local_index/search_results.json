@@ -1,0 +1,47 @@
+{
+  "query": "什么是 RAG？",
+  "top_k": 3,
+  "embedding_model": "local_hash_embedding_v1",
+  "embedding_dim": 64,
+  "results": [
+    {
+      "rank": 1,
+      "score": 0.48590614930569764,
+      "chunk_id": "doc16_eval_and_badcases_chunk_000",
+      "doc_id": "doc16_eval_and_badcases",
+      "title": "评测与 Bad Case",
+      "source_path": "/Volumes/学习资料/ai-notes/code/docs/doc16_eval_and_badcases.md",
+      "chunk_index": 0,
+      "start_char": 0,
+      "end_char": 199,
+      "char_count": 199,
+      "chunk_text": "# 评测与 Bad Case\n\n一个 RAG 系统做出来之后，不能只凭感觉判断它“差不多能用”。更稳妥的方式是准备一批测试问题，观察答案质量、引用是否正确，以及拒答是否合理。\n\nBad case 的价值很高，因为它能帮助你看到系统失败的具体位置：是文档没准备好、切分不合理、检索错了，还是生成阶段没有遵守证据边界。\n\n真正的优化通常不是从“泛泛觉得不太好”开始，而是从“知道哪类问题总是出错”开始。"
+    },
+    {
+      "rank": 2,
+      "score": 0.3830998234143787,
+      "chunk_id": "doc12_frontend_ai_ux_chunk_000",
+      "doc_id": "doc12_frontend_ai_ux",
+      "title": "AI 应用前端体验",
+      "source_path": "/Volumes/学习资料/ai-notes/code/docs/doc12_frontend_ai_ux.md",
+      "chunk_index": 0,
+      "start_char": 0,
+      "end_char": 208,
+      "char_count": 208,
+      "chunk_text": "# AI 应用前端体验\n\nAI 应用的前端不只是展示结果，还负责把模型的“不确定性”和“过程状态”翻译成用户能理解的体验。常见要素包括 loading、错误提示、复制按钮、调试面板、来源展示和成本信息展示。\n\n一个“只会返回答案”的页面往往不够好用，因为用户还会关心：现在是不是在生成、失败时为什么失败、答案是不是有来源、这次请求大概耗时多久。\n\n所以，前端体验并不是最后再补的装饰，而是 AI 产品可用性的一部分。"
+    },
+    {
+      "rank": 3,
+      "score": 0.3460357711201767,
+      "chunk_id": "doc08_rag_overview_chunk_000",
+      "doc_id": "doc08_rag_overview",
+      "title": "RAG 总览",
+      "source_path": "/Volumes/学习资料/ai-notes/code/docs/doc08_rag_overview.md",
+      "chunk_index": 0,
+      "start_char": 0,
+      "end_char": 252,
+      "char_count": 252,
+      "chunk_text": "# RAG 总览\n\nRAG 的全称是 Retrieval-Augmented Generation，意思是“检索增强生成”。它的基本流程是：先准备文档，切分并向量化，建立索引；用户提问时先检索相关内容，再把问题和检索结果一起交给生成模型作答。\n\nRAG 的价值在于，它让模型回答时不只依赖训练记忆，还可以利用外部资料和私有知识库。这样更适合做企业 FAQ、技术文档问答、个人笔记检索等场景。\n\n一个完整 RAG 系统至少包含两条能力链路：检索链路和生成链路。只理解其中一条，通常都不足以把项目真正做起来。"
+    }
+  ]
+}

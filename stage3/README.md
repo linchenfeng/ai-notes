@@ -6,7 +6,7 @@
 ## 阶段日程
 - [Day 29](day29.md)：学习 RAG 总流程：读文档、切分、向量化、检索、生成。
   任务：画 RAG 流程图。
-  产出：rag_flow.md。
+  产出：day29_rag_flow.md。
 - [Day 30](day30.md)：学习什么是 Embedding。
   任务：用自己的话写清楚“生成模型”和“向量表示”的区别。
   产出：解释文档。
@@ -18,7 +18,7 @@
   产出：docs/ 资料库。
 - [Day 33](day33.md)：写文档读取脚本。
   任务：先支持 txt/md。
-  产出：load_docs.py。
+  产出：day33_load_docs.py。
 - [Day 34](day34.md)：写切分脚本。
   任务：把文档切成多个 chunk。
   产出：split_docs.py。
