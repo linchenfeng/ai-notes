@@ -10,17 +10,78 @@
 
     <div v-if="activeName === '0'">
       <el-descriptions border :title="$t('基础信息')" :column="3">
-        <el-descriptions-item :label="$t('开票申请编号')">{{ baseInfo.appNo }}</el-descriptions-item>
-        <el-descriptions-item :label="$t('申请书编号')">{{ baseInfo.applicationNo }}</el-descriptions-item>
-        <el-descriptions-item :label="$t('申请开票企业名称')">{{ baseInfo.invoiceApplyOrgName }}</el-descriptions-item>
-        <el-descriptions-item :label="$t('开票主体名称')">{{ baseInfo.invoiceSubjectName }}</el-descriptions-item>
-        <el-descriptions-item :label="$t('币种')">{{ baseInfo.currencyName }}</el-descriptions-item>
-        <el-descriptions-item :label="$t('开票金额(元)')">{{ baseInfo.invoiceAmt | moneyFormat }}</el-descriptions-item>
-        <el-descriptions-item :label="$t('开票日期')">{{ baseInfo.invoiceDate | myDateFormat(2) }}</el-descriptions-item>
-        <el-descriptions-item :label="$t('操作日期')">{{ baseInfo.operateDate | myDateFormat(1) }}</el-descriptions-item>
-        <el-descriptions-item :label="$t('状态')">{{ getValueByKey(baseInfo.confirmStatus, 'confirmStatus') || baseInfo.confirmStatus }}</el-descriptions-item>
+        <el-descriptions-item :label="$t('开票申请编号')">{{
+          baseInfo.appNo
+        }}</el-descriptions-item>
+        <el-descriptions-item :label="$t('申请书编号')">{{
+          baseInfo.applicationNo
+        }}</el-descriptions-item>
+        <el-descriptions-item :label="$t('申请开票企业名称')">{{
+          baseInfo.invoiceApplyOrgName
+        }}</el-descriptions-item>
+        <el-descriptions-item :label="$t('开票主体名称')">{{
+          baseInfo.invoiceSubjectName
+        }}</el-descriptions-item>
+        <el-descriptions-item :label="$t('币种')">{{
+          baseInfo.currencyName
+        }}</el-descriptions-item>
+        <el-descriptions-item :label="$t('开票金额(元)')">{{
+          baseInfo.invoiceAmt | moneyFormat
+        }}</el-descriptions-item>
+        <el-descriptions-item :label="$t('开票日期')">{{
+          baseInfo.invoiceDate | myDateFormat(2)
+        }}</el-descriptions-item>
+        <el-descriptions-item :label="$t('操作日期')">{{
+          baseInfo.operateDate | myDateFormat(1)
+        }}</el-descriptions-item>
+        <el-descriptions-item :label="$t('状态')">{{
+          getValueByKey(baseInfo.confirmStatus, "confirmStatus") ||
+          baseInfo.confirmStatus
+        }}</el-descriptions-item>
       </el-descriptions>
-
+      <div
+        v-if="['32', '36'].includes(saaQueryInfo.applyType)"
+        class="dont-crowd-me"
+      >
+        <table class="detail-information" width="100%">
+          <thead>
+            <tr>
+              <th class="detail-information-head-title" colspan="2">
+                <label>{{ $t("本次申请准入店铺信息") }}</label>
+              </th>
+            </tr>
+          </thead>
+        </table>
+        <div class="detail-table-wrap">
+          <ty-table class="detail-table" :data="saaQueryInfo.shopList" stripe>
+            <ty-table-column
+              :label="$t('序号')"
+              type="index"
+              width="50"
+            ></ty-table-column>
+            <ty-table-column
+              :label="$t('店铺名称')"
+              prop="shopName"
+              min-width="180"
+            ></ty-table-column>
+            <ty-table-column
+              :label="$t('店铺ID')"
+              prop="sellingPartnerId"
+              min-width="180"
+            ></ty-table-column>
+            <ty-table-column
+              :label="$t('店铺所在国家')"
+              prop="shopCountry"
+              min-width="180"
+            ></ty-table-column>
+            <ty-table-column
+              :label="$t('不准入原因')"
+              prop="notRatifyRemark"
+              min-width="180"
+            ></ty-table-column>
+          </ty-table>
+        </div>
+      </div>
       <review-info v-if="showHistory" :opinionList="opinionList" />
     </div>
 
@@ -31,34 +92,34 @@
 </template>
 
 <script>
-import ReviewInfo from '@/pages/ecommerce/components/ReviewInfo.vue'
-import ClientInfo from '@/pages/ecommerce/components/ClientInfo.vue'
+import ReviewInfo from "@/pages/ecommerce/components/ReviewInfo.vue";
+import ClientInfo from "@/pages/ecommerce/components/ClientInfo.vue";
 
 export default {
   components: {
     ReviewInfo,
-    ClientInfo
+    ClientInfo,
   },
   data() {
     return {
-      activeName: '0',
+      activeName: "0",
       baseInfo: {
-        appNo: '', // 开票申请编号
-        applicationNo: '', // 申请书编号
-        invoiceApplyOrgName: '', // 申请开票企业名称
-        invoiceSubjectName: '', // 开票主体名称
-        currencyName: '', // 币种
-        invoiceAmt: '', // 开票金额
-        invoiceDate: '', // 开票日期
-        operateDate: '', // 操作日期
-        confirmStatus: '', // 状态
-        dqscNo: '' // 资料检查申请编号
+        appNo: "", // 开票申请编号
+        applicationNo: "", // 申请书编号
+        invoiceApplyOrgName: "", // 申请开票企业名称
+        invoiceSubjectName: "", // 开票主体名称
+        currencyName: "", // 币种
+        invoiceAmt: "", // 开票金额
+        invoiceDate: "", // 开票日期
+        operateDate: "", // 操作日期
+        confirmStatus: "", // 状态
+        dqscNo: "", // 资料检查申请编号
       },
       opinionList: [],
-      showHistory: false
-    }
-  }
-}
+      showHistory: false,
+    };
+  },
+};
 </script>
 
 <style lang="scss" scoped>
