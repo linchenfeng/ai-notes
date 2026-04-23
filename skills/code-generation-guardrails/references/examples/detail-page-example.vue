@@ -39,6 +39,7 @@
           baseInfo.confirmStatus
         }}</el-descriptions-item>
       </el-descriptions>
+
       <div
         v-if="['32', '36'].includes(saaQueryInfo.applyType)"
         class="dont-crowd-me"
@@ -52,6 +53,7 @@
             </tr>
           </thead>
         </table>
+
         <div class="detail-table-wrap">
           <ty-table class="detail-table" :data="saaQueryInfo.shopList" stripe>
             <ty-table-column
@@ -82,6 +84,7 @@
           </ty-table>
         </div>
       </div>
+
       <review-info v-if="showHistory" :opinionList="opinionList" />
     </div>
 
@@ -113,7 +116,11 @@ export default {
         invoiceDate: "", // 开票日期
         operateDate: "", // 操作日期
         confirmStatus: "", // 状态
-        dqscNo: "", // 资料检查申请编号
+        dqscNo: "", // 资料审查申请编号
+      },
+      saaQueryInfo: {
+        applyType: "",
+        shopList: [],
       },
       opinionList: [],
       showHistory: false,
