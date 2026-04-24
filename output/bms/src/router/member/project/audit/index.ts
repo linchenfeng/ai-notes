@@ -20,6 +20,7 @@ import assignDueDiligence from './assignDueDiligence' // 指派尽调
 import check from './check' // 核查企业信息
 import loanApply from './loanApply' // 融資申請審核
 import invoice from './invoice' // 开票审核
+import invoiceReview from './invoiceReview' // 开票审核新增
 export default [
   ...quotaAudit,
   ...quotation,
@@ -35,5 +36,6 @@ export default [
   ...assignDueDiligence,
   ...check,
   ...loanApply,
-  ...invoice
+  ...invoice,
+  ...invoiceReview
 ]

@@ -6,7 +6,7 @@
  * @Description  : 开票审核相关api
  */
 import { request } from '@/api/api.request'
-import { InvoiceCount, FgaiAppList, SubmitData } from '@/interfaces/member/project/audit/invoice'
+import { InvoiceCount, FgaiAppList, Search, SubmitData } from '@/interfaces/member/project/audit/invoice'
 export default {
   /**
    * @Author: LongCan.Yang
@@ -14,7 +14,7 @@ export default {
    * @param {object} data
    * @description: 获取待审批发票统计
    */
-  getInvoiceCount(data: object) {
+  getInvoiceCount(data: Pick<Search['data'], 'queryCondition'>) {
     return request<InvoiceCount>('POST', '/api-sme/invoiceAudit/getInvoiceCount', data)
   },
   /**
@@ -23,7 +23,7 @@ export default {
    * @param {Search} data
    * @description: 获取待审批发票列表
    */
-  findInvoicePage(data: object) {
+  findInvoicePage(data: Search) {
     return request<{ fgaiAppList: FgaiAppList[] }>('POST', '/api-sme/invoiceAudit/findInvoicePage', data)
   },
   /**

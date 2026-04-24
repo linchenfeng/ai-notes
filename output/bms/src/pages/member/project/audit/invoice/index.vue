@@ -15,7 +15,7 @@
           v-insert-clear:[search.data.queryCondition]="resetSearch"
           :clearabled="false"
           :search-icon-size="0"
-          placeholder="请输入开票企业名称/申请开票金额"
+          placeholder="请输入开票企业名称/申请书编号"
           :show-action="true"
           :action-style="{ color: '#395fee' }"
           @search="searchProjectPage"
@@ -36,7 +36,7 @@
                 <view class="financingNo">
                   <u-row>
                     <u-col span="7">
-                      <view class="text ellipsis">{{ item.appNo }}</view>
+                      <view class="text ellipsis">{{ item.applyNo || item.appNo }}</view>
                     </u-col>
                     <u-col span="5">
                       <view class="flex-box">
@@ -76,7 +76,7 @@
 <script setup lang="ts">
 import NavBar from '@/layout/NavBar.vue'
 import { onReachBottom, onShow, onPullDownRefresh } from '@dcloudio/uni-app'
-import { FgaiAppList } from '@/interfaces/member/project/audit/invoice'
+import { FgaiAppList, Search } from '@/interfaces/member/project/audit/invoice'
 import empty from '@/assets/empty/empty.png'
 import { useRouter } from '@/uni-simple-router'
 import { encodeBase64 } from '@/utils/crypto'
@@ -109,7 +109,7 @@ let tabsList = [
   }
 ]
 // 用于搜索请求的数据
-const search = reactive({
+const search = reactive<Search>({
   data: {
     queryCondition: '',
     tabStatus: '11'
@@ -130,7 +130,7 @@ let totalCount = ref(0)
  * @description: 获取笔数
  */
 const getInvoiceCount = () => {
-  const data = {
+  const data: Pick<Search['data'], 'queryCondition'> = {
     queryCondition: search.data.queryCondition
   }
   apiInvoice.getInvoiceCount(data).then(res => {

@@ -23,13 +23,32 @@ export interface InvoiceCount {
    */
   returnCount: number
 }
+export interface SearchData {
+  /**
+   * 查询条件：开票企业名称/申请书编号
+   */
+  queryCondition: string
+  /**
+   * 列表状态：11=待审核/2=已退回/1=已通过/0=已拒绝
+   */
+  tabStatus: string
+}
+export interface Search {
+  data: SearchData
+  pageNum: number
+  pageSize: number
+}
 export interface FgaiAppList {
+  /**
+   * 申请书编号
+   */
+  applyNo?: string
   /**
    * 申请编号
    */
   appNo: string
   /**
-   * 申请开票企业名称
+   * 开票企业名称
    */
   appOrgName: string
   /**

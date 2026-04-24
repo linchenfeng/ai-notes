@@ -1,0 +1,7 @@
+interface:
+  display_name: "BMS UniApp 约束"
+  short_description: "用于约束同级 BMS uni-app Vue3 项目的代码生成。"
+  default_prompt: "使用 $bms-uniapp-vue3-guardrails 在同级 bms 项目中新增或修改代码，并严格遵循它现有的 uni-app、Vue 3 与业务目录约定。"
+
+policy:
+  allow_implicit_invocation: true
