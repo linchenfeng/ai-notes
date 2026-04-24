@@ -1,0 +1,23 @@
+/*
+ * @Author       : LongCan.Yang
+ * @Date         : 2023-09-26 16:59:45
+ * @LastEditors  : Charon.Lin
+ * @LastEditTime : 2025-07-30 17:21:14
+ * @Description  : Layout 布局
+ */
+.u-row {
+  .u-col {
+    display: inline-block;
+    font-size: 28rpx;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  //  padding: 0 6rpx !important;
+  }
+  .text-right {
+    text-align: right !important;
+  }
+  .text-center {
+    text-align: center !important;
+  }
+}

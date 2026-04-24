@@ -1,0 +1,375 @@
+@charset "utf-8";
+
+.float-left {
+  @include mixin-flotAlign(left);
+}
+.float-right {
+  @include mixin-flotAlign(right);
+}
+.clearfix {
+  @include mixin-clearfix();
+}
+
+.text-left {
+  @include mixin-textAlign(left);
+}
+.text-center {
+  @include mixin-textAlign(center);
+}
+.text-right {
+  @include mixin-textAlign(right);
+}
+
+.inline {
+  @include mixin-display(inline);
+}
+.inline-block {
+  @include mixin-display(inline-block);
+}
+.block {
+  @include mixin-display(block);
+}
+
+.hide {
+  @include mixin-display(none);
+}
+.show {
+  @include mixin-display(block);
+}
+
+// 解决api并发请求，产生多个loading，导致loading重叠，使用样式隐藏相邻loading
+.wl_vteam-loading + .wl_vteam-loading {
+  visibility: hidden;
+}
+.wl_vteam-loading {
+  box-shadow: none !important;
+  z-index: 20002 !important;
+  &::before {
+    content: '';
+    position: fixed;
+    width: 200vw;
+    height: 200vh;
+    left: -50vw;
+    top: -50vh;
+    background: transparent;
+    z-index: 20002 !important;
+    pointer-events: all;
+  }
+}
+.u-search {
+  .u-search__action {
+    text-align: right !important;
+    font-size: 32rpx !important;
+  }
+  .u-search__action--active {
+    width: 80rpx !important;
+    margin-right: 20rpx;
+  }
+
+  .u-search__content__input {
+    margin-left: 0rpx !important;
+  }
+}
+.popover-classbi0 {
+  left: 152rpx !important;
+  .driver-popover-description {
+    float: left;
+  }
+  .driver-popover-tip {
+    left: 0;
+  }
+}
+.popover-classbi1 {
+  left: 320rpx !important;
+  .driver-popover-description {
+    position: relative;
+    left: -110rpx;
+  }
+}
+.popover-classbi2 {
+  left: 480rpx !important;
+  .driver-popover-description {
+    position: relative;
+    left: -100rpx;
+  }
+}
+.popover-classbi3 {
+  right: 150rpx !important;
+  left: auto !important;
+  justify-content: end;
+  .driver-popover-description {
+    float: right;
+  }
+  .driver-popover-tip {
+    right: 0;
+  }
+}
+.popover-class0 {
+  left: 122rpx !important;
+  .driver-popover-description {
+    float: left;
+  }
+  .driver-popover-tip {
+    left: 0;
+  }
+}
+.popover-class1 {
+  left: 290rpx !important;
+  .driver-popover-description {
+    position: relative;
+    left: -110rpx;
+  }
+}
+.popover-class2 {
+  left: 460rpx !important;
+  .driver-popover-description {
+    position: relative;
+    left: -100rpx;
+  }
+}
+.popover-class3 {
+  right: 122rpx !important;
+  left: auto !important;
+  justify-content: end;
+  .driver-popover-description {
+    float: right;
+  }
+  .driver-popover-tip {
+    right: 0;
+  }
+}
+.popover-class-myInfo {
+  left: 370rpx !important;
+  .driver-popover-description {
+    position: relative;
+    left: -120rpx !important;
+  }
+}
+/* 重置默认箭头样式，作为容器 */
+.driver-popover-tip {
+  position: absolute !important;
+  width: auto !important;
+  height: auto !important;
+  border: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.driver-popover-tip.top::before {
+  content: '';
+  position: absolute;
+  /* 上部长条样式 */
+  width: 5rpx !important;
+  height: 40px !important;
+  background: linear-gradient(0deg, #ffffff 0%, rgba(255, 255, 255, 0.2) 100%) !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  z-index: 5;
+}
+
+.driver-popover-tip.top::after {
+  content: '';
+  position: absolute;
+  /* 同心圆实现 */
+  width: 10px;
+  height: 10px;
+  /* 外层圆：半透明白色 */
+  background: #fff;
+  border-radius: 50%;
+  /* 内层圆：通过box-shadow创建 */
+  box-shadow: 0 0 0 10px rgba(255, 255, 255, 0.5), /* 外层扩散效果 */ 0 0 0 4px #ffffff; /* 内层实心圆 */
+  /* 定位 */
+  top: 44px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+}
+.driver-popover-tip.bottom::before {
+  content: '';
+  position: absolute;
+  /* 旋转后变为下部长条，调整方向和位置 */
+  width: 5rpx !important;
+  height: 40px !important;
+  background: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0.2) 100%) !important; /* 反转渐变方向 */
+  left: 50% !important;
+  transform: translateX(-50%) rotate(180deg) !important; /* 旋转180度 */
+  bottom: 0; /* 调整定位到底部 */
+  z-index: 5;
+}
+
+.driver-popover-tip.bottom::after {
+  content: '';
+  position: absolute;
+  /* 同心圆实现 */
+  width: 10px;
+  height: 10px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 10px rgba(255, 255, 255, 0.5), 0 0 0 4px #ffffff;
+  /* 调整定位适配旋转后的方向 */
+  bottom: 44px; /* 从top改为bottom */
+  left: 50%;
+  transform: translateX(-50%) rotate(180deg); /* 旋转180度 */
+  z-index: 3;
+}
+.scoped-class {
+  background: none !important;
+  margin-top: 10rpx;
+  box-shadow: none !important;
+  padding: 0 !important;
+  .driver-popover-title {
+    display: none !important;
+  }
+
+  .step-item-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 140rpx 0;
+    .bg-apply {
+      width: 445rpx;
+      height: 90rpx;
+      background: url('@/assets/member/project/apply.png') no-repeat center;
+      background-size: contain;
+    }
+    .bg-audit {
+      width: 445rpx;
+      height: 90rpx;
+      background: url('@/assets/member/project/audit.png') no-repeat center;
+      background-size: contain;
+    }
+    .bg-query {
+      width: 445rpx;
+      height: 90rpx;
+      background: url('@/assets/member/project/query.png') no-repeat center;
+      background-size: contain;
+    }
+    .bg-quota {
+      width: 445rpx;
+      height: 90rpx;
+      background: url('@/assets/member/project/quota.png') no-repeat center;
+      background-size: contain;
+    }
+    .applyassist {
+      width: 208rpx;
+      height: 65rpx;
+      background: url('@/assets/member/project/applyassist.png') no-repeat center;
+      background-size: contain;
+    }
+    .documentreview {
+      width: 269rpx;
+      height: 65rpx;
+      background: url('@/assets/member/project/documentreview.png') no-repeat center;
+      background-size: contain;
+    }
+    .appointassist {
+      width: 208rpx;
+      height: 65rpx;
+      background: url('@/assets/member/project/appointassist.png') no-repeat center;
+      background-size: contain;
+    }
+    .applySiteDueDiligence {
+      width: 208rpx;
+      height: 65rpx;
+      background: url('@/assets/member/project/applySiteDueDiligence.png') no-repeat center;
+      background-size: contain;
+    }
+    .auditAssignDueDiligence {
+      width: 208rpx;
+      height: 65rpx;
+      background: url('@/assets/member/project/auditAssignDueDiligence.png') no-repeat center;
+      background-size: contain;
+    }
+    .check {
+      width: 208rpx;
+      height: 65rpx;
+      background: url('@/assets/member/project/check.png') no-repeat center;
+      background-size: contain;
+    }
+    .loanApply {
+      width: 208rpx;
+      height: 65rpx;
+      background: url('@/assets/member/project/loanApply.png') no-repeat center;
+      background-size: contain;
+    }
+    .loanAudit {
+      width: 208rpx;
+      height: 65rpx;
+      background: url('@/assets/member/project/loanAudit.png') no-repeat center;
+      background-size: contain;
+    }
+    .business {
+      width: 215rpx;
+      height: 65rpx;
+      background: url('@/assets/member/project/business.png') no-repeat center;
+      background-size: contain;
+    }
+    .performance {
+      width: 247rpx;
+      height: 66rpx;
+      background: url('@/assets/member/project/performance.png') no-repeat center;
+      background-size: contain;
+    }
+    .loan {
+      width: 187rpx;
+      height: 66rpx;
+      background: url('@/assets/member/project/loan.png') no-repeat center;
+      background-size: contain;
+    }
+    .customer {
+      width: 269rpx;
+      height: 67rpx;
+      background: url('@/assets/member/project/customer.png') no-repeat center;
+      background-size: contain;
+    }
+    .overdue {
+      width: 248rpx;
+      height: 65rpx;
+      background: url('@/assets/member/project/overdue.png') no-repeat center;
+      background-size: contain;
+    }
+    .datainsight {
+      color: #fff;
+      text-align: center;
+      font-size: 28rpx;
+      font-weight: 600;
+    }
+    .next-button {
+      width: 194rpx;
+      height: 78rpx;
+      background: url('@/assets/member/project/next.png') no-repeat center;
+      background-size: contain;
+      margin-top: 30rpx;
+    }
+    .iknow {
+      width: 194rpx;
+      height: 78rpx;
+      background: url('@/assets/member/project/iknow.png') no-repeat center;
+      background-size: contain;
+      margin-top: 30rpx;
+    }
+    .auditInvoice {
+      width: 239rpx;
+      height: 65rpx;
+      background: url('@/assets/member/project/auditInvoice.png') no-repeat center;
+      background-size: contain;
+      margin-top: 30rpx;
+    }
+    .myinfoInvoice {
+      width: 248rpx;
+      height: 65rpx;
+      background: url('@/assets/member/project/myinfo-invoice.png') no-repeat center;
+      background-size: contain;
+      margin-top: 30rpx;
+    }
+  }
+}
+div#driver-popover-item {
+  min-width: auto !important;
+}
+#driver-highlighted-element-stage {
+  border-radius: 20rpx !important;
+}
+.uni-sample-toast {
+  width: 500rpx;
+}

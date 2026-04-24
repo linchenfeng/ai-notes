@@ -1,0 +1,49 @@
+/**
+ * @Author: may.ruan
+ * @Date: 2022-12-05 11:22:27
+ * @param {$status} 状态值 0/默认.警告黄色、1.成功绿色、2.主题蓝色、9.错误红色
+ * @description: 状态颜色
+ */
+@mixin mixin-status($status) {
+  $color: $warning;
+  // 警告黄色
+  @if ($status == 0) {
+    $color: $warning;
+  }
+  // 成功绿色
+  @if ($status == 1) {
+    $color: $success;
+  }
+  // 主题蓝色
+  @if ($status == 2) {
+    $color: $primary;
+  }
+  // 错误红色
+  @if ($status == 9) {
+    $color: $danger;
+  }
+  font-size: 26rpx;
+  padding: 10rpx 16rpx;
+  border: 1rpx solid $color;
+  border-radius: 5rpx;
+  color: $color;
+}
+@mixin mixin-statusSign($status) {
+  $color: $warning;
+  // 警告黄色
+  @if ($status == 0) {
+    $color: $warning;
+  }
+  // 成功绿色
+  @if ($status == 1) {
+    $color: $success;
+  }
+  // 主题蓝色
+  @if ($status == 2) {
+    $color: $primary;
+  }
+  // 错误红色
+  @if ($status == 9) {
+    $color: #f52349;
+  }
+}

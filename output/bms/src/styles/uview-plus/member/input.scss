@@ -1,0 +1,19 @@
+.u-input {
+  .u-icon__icon {
+    font-size: 32rpx !important;
+  }
+}
+
+.u-textarea {
+  margin-bottom: 40rpx;
+  &.inputValueClass {
+    margin-bottom: 40rpx;
+  }
+  .u-textarea__count {
+    background-color: transparent !important;
+    height: 36rpx;
+    box-sizing: border-box;
+    line-height: 36rpx;
+    bottom: -40rpx !important;
+  }
+}

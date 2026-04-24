@@ -1,0 +1,38 @@
+/*
+ * @Author       : LongCan.Yang
+ * @Date         : 2023-09-19 16:34:52
+ * @LastEditors  : Longcan.Yang
+ * @LastEditTime : 2025-08-22 13:41:32
+ * @Description  : 重置数据为空样式
+ */
+// :deep(.u-empty) {
+//   margin-top: 100rpx !important;
+//   .u-empty__text {
+//     font-size: 24rpx !important;
+//     color: #969799 !important;
+//   }
+// }
+@keyframes fadeShow {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.u-empty {
+  height: 100%;
+  animation: fadeShow 3s;
+  padding-top: 180rpx;
+  view {
+    background-size: 100% !important;
+    background-position-y: bottom !important;
+  }
+  .u-empty__text {
+    color: #666 !important;
+    font-size: 28rpx !important;
+    // color: $primary !important;
+    margin-top: 30rpx !important;
+  }
+}

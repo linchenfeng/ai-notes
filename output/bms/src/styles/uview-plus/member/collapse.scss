@@ -1,0 +1,47 @@
+/*
+ * @Author       : may.ruan
+ * @Date         : 2023-01-31 15:54:02
+ * @LastEditors  : Longcan.Yang
+ * @LastEditTime : 2024-10-18 16:06:26
+ * @Description  : 折叠面板样式重置(会员中心)
+ */
+
+// .wap-member {
+.u-collapse {
+  font-size: 24px;
+  .u-collapse-item {
+    border-radius: 5px;
+    box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.1);
+    margin-bottom: $spaced;
+    .u-cell .u-cell__body {
+      padding: 34rpx $spaced;
+      align-items: center;
+      .u-cell__body__content {
+        flex: auto;
+        .u-cell__title,
+        .u-cell__title-text {
+          font-size: 28rpx;
+          font-weight: bold;
+          color: $default-color;
+        }
+      }
+      .u-icon--right .u-icon__icon {
+        font-size: 32rpx !important;
+        color: $remark-color;
+      }
+    }
+    // .u-collapse-item__content{
+    //   padding-bottom: 10rpx;
+    // }
+    .u-collapse-item__content__text {
+      padding: 0 30rpx;
+      .u-cell-group {
+        .u-cell .u-cell__body .u-cell__title-text {
+          color: $sub-color;
+          font-weight: normal;
+        }
+      }
+    }
+  }
+}
+// }

@@ -1,0 +1,151 @@
+@font-face {
+  font-family: "iconfont-bms-colorful"; /* Project id 4760599 */
+  /* Color fonts */
+  src: 
+       url('iconfont.woff2?t=1772608209629') format('woff2'),
+       url('iconfont.woff?t=1772608209629') format('woff'),
+       url('iconfont.ttf?t=1772608209629') format('truetype');
+      font-display: block;
+
+}
+
+.iconfont-bms-colorful {
+  font-family: "iconfont-bms-colorful" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.bms-color-fapiao:before {
+  content: "\f94b";
+}
+
+.bms-color-zizhibanli:before {
+  content: "\100e0";
+}
+
+.bms-color-quxiao:before {
+  content: "\e61f";
+}
+
+.bms-color-jieshu:before {
+  content: "\e61e";
+}
+
+.bms-color-a-shangchuan1:before {
+  content: "\e61d";
+}
+
+.bms-color-kuaixun:before {
+  content: "\f9af";
+}
+
+.bms-color-dianping:before {
+  content: "\f9ba";
+}
+
+.bms-color-zhanghuxiugai:before {
+  content: "\f900";
+}
+
+.bms-color-fenxiangerweima:before {
+  content: "\f902";
+}
+
+.bms-color-fankui:before {
+  content: "\f993";
+}
+
+.bms-color-lizhishenqing:before {
+  content: "\fa14";
+}
+
+.bms-color-kefuguanli:before {
+  content: "\fa23";
+}
+
+.bms-color-jisuanqi:before {
+  content: "\fa31";
+}
+
+.bms-color-liangzheng:before {
+  content: "\100e2";
+}
+
+.bms-color-shujutongji:before {
+  content: "\100e3";
+}
+
+.bms-color-shoujichongzhi:before {
+  content: "\100e4";
+}
+
+.bms-color-yinhangka:before {
+  content: "\100e5";
+}
+
+.bms-color-goufang:before {
+  content: "\100e6";
+}
+
+.bms-color-zhengjian:before {
+  content: "\100e7";
+}
+
+.bms-color-dingwei:before {
+  content: "\100e8";
+}
+
+.bms-color-yifenxiang1:before {
+  content: "\e60f";
+}
+
+.bms-color-RAR:before {
+  content: "\e60d";
+}
+
+.bms-color-ZIP:before {
+  content: "\e63e";
+}
+
+.bms-color-JPG:before {
+  content: "\e63f";
+}
+
+.bms-color-VIDEO:before {
+  content: "\e640";
+}
+
+.bms-color-WORD:before {
+  content: "\e641";
+}
+
+.bms-color-PNG:before {
+  content: "\e642";
+}
+
+.bms-color-GIF:before {
+  content: "\e643";
+}
+
+.bms-color-ECEL:before {
+  content: "\e644";
+}
+
+.bms-color-PPT:before {
+  content: "\e645";
+}
+
+.bms-color-tupianziliao:before {
+  content: "\e646";
+}
+
+.bms-color-PDF1:before {
+  content: "\e647";
+}
+
+.bms-color-drxx66:before {
+  content: "\e702";
+}
+

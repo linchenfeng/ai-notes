@@ -1,0 +1,24 @@
+@charset 'utf-8';
+@import './uview-plus/theme.scss';
+$primary: $u-primary;
+$success: $u-success;
+$warning: $u-warning;
+$danger: $u-error;
+$info: $u-info;
+$money: $u-warning;
+$border-color: #dedede;
+$bg-color: #f6f6f6;
+$white-color: #fff;
+$spaced: 30rpx; // 间距
+
+//字体颜色
+$default-color: #333;
+$sub-color: #666;
+$remark-color: #999;
+$white-color: #fff;
+$link-color: var(--u-blue);
+$money-color: #ff6200;
+$hover-color: #f9f9f9;
+// $font-family: -apple-system, PingFangSC-Light, 'Microsoft YaHei', tahoma, arial, 'Hiragino Sans GB', '\5B8B\4F53', sans-serif;
+$font-family: Open Sans, -apple-system, BlinkMacSystemFont, Helvetica Neue, Helvetica, Segoe UI, Arial, Roboto, PingFang SC, miui, Hiragino Sans GB,
+  Microsoft Yahei, sans-serif;

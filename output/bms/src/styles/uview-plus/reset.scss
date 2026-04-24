@@ -1,0 +1,17 @@
+/*
+ * @Author       : may.ruan
+ * @Date         : 2022-12-05 10:33:10
+ * @LastEditors  : LongCan.Yang
+ * @LastEditTime : 2024-07-01 16:02:38
+ * @Description  : uview-plus-ui样式重置
+ */
+.u-overlay {
+  // 防止其他内容遮挡
+  z-index: 99;
+}
+.u-button--primary,
+.u-button--success {
+  font-size: 32rpx;
+  height: 88rpx;
+  border-radius: 10rpx;
+}

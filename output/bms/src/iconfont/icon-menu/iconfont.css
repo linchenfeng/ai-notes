@@ -1,0 +1,159 @@
+@font-face {
+  font-family: "iconfont-menu"; /* Project id 4965190 */
+  /* Color fonts */
+  src: 
+       url('iconfont.woff2?t=1772607810505') format('woff2'),
+       url('iconfont.woff?t=1772607810505') format('woff'),
+       url('iconfont.ttf?t=1772607810505') format('truetype');
+              font-display: block;
+
+}
+
+.iconfont-menu {
+  font-family: "iconfont-menu" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.bms-menu-fapiao:before {
+  content: "\f94b";
+}
+
+.bms-menu-yuqijinggao:before {
+  content: "\e642";
+}
+
+.bms-menu-gongzichaxun:before {
+  content: "\fa18";
+}
+
+.bms-menu-jifen:before {
+  content: "\f975";
+}
+
+.bms-menu-chanpin:before {
+  content: "\f992";
+}
+
+.bms-menu-jifenduihuan:before {
+  content: "\f905";
+}
+
+.bms-menu-jiudian:before {
+  content: "\f908";
+}
+
+.bms-menu-tongji:before {
+  content: "\f9f5";
+}
+
+.bms-menu-kuaixun:before {
+  content: "\f9af";
+}
+
+.bms-menu-dianping:before {
+  content: "\f9ba";
+}
+
+.bms-menu-qiyebumen:before {
+  content: "\fa24";
+}
+
+.bms-menu-shiwuzhaoling:before {
+  content: "\fa02";
+}
+
+.bms-menu-zhuanzhang:before {
+  content: "\f964";
+}
+
+.bms-menu-baomi:before {
+  content: "\f977";
+}
+
+.bms-menu-biaoshu:before {
+  content: "\f930";
+}
+
+.bms-menu-yuangongfankui:before {
+  content: "\fa25";
+}
+
+.bms-menu-yonghuchaxun:before {
+  content: "\fa3a";
+}
+
+.bms-menu-gongjijin:before {
+  content: "\100e2";
+}
+
+.bms-menu-qiye:before {
+  content: "\f9a1";
+}
+
+.bms-menu-paimai:before {
+  content: "\f906";
+}
+
+.bms-menu-huiyuan:before {
+  content: "\f925";
+}
+
+.bms-menu-yaoqing:before {
+  content: "\f94f";
+}
+
+.bms-menu-zhishi:before {
+  content: "\f984";
+}
+
+.bms-menu-hangqing:before {
+  content: "\f9ae";
+}
+
+.bms-menu-renwu:before {
+  content: "\f9db";
+}
+
+.bms-menu-wenjian:before {
+  content: "\fa08";
+}
+
+.bms-menu-jiabanshenqing:before {
+  content: "\fa12";
+}
+
+.bms-menu-shenpiliucheng:before {
+  content: "\fa1f";
+}
+
+.bms-menu-chaxun:before {
+  content: "\f9d8";
+}
+
+.bms-menu-baike:before {
+  content: "\f9fb";
+}
+
+.bms-menu-fengxianpinggu:before {
+  content: "\f9eb";
+}
+
+.bms-menu-liuchengshenpi:before {
+  content: "\fa1b";
+}
+
+.bms-menu-guahao:before {
+  content: "\f97f";
+}
+
+.bms-menu-dingdanchaxun:before {
+  content: "\fa2b";
+}
+
+.bms-menu-yuyue:before {
+  content: "\100e0";
+}
+

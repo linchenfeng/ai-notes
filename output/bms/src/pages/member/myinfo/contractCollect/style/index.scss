@@ -1,0 +1,100 @@
+.textRecognition {
+  width: 230rpx;
+  // height: 24rpx;
+  padding: 8rpx;
+  margin: 0 0 28rpx 0;
+  background: #f7f7f7;
+  border: 1rpx solid #e8f0fd;
+  border-radius: 5rpx;
+  padding-left: 20rpx;
+  color: #138bec;
+  .text {
+    font-size: 28rpx;
+  }
+  cover-image {
+    width: 30rpx;
+    height: 30rpx;
+    vertical-align: middle;
+    margin-right: 15rpx;
+  }
+}
+:deep(.flex) {
+  display: flex;
+  align-items: center;
+  .flexNone {
+    flex: none;
+  }
+}
+:deep(.error) {
+  color: $danger;
+  font-weight: normal !important;
+}
+:deep(.u-modal) {
+  .u-modal__content {
+    padding: 60rpx 0 0 0 !important;
+    display: block;
+    .slot-content {
+      .title {
+        position: relative;
+        text-align: center;
+        .iconfont {
+          position: absolute;
+          top: -16rpx;
+          right: 14rpx;
+        }
+      }
+      .importText {
+        padding: 40rpx;
+        .fieldBox {
+          border: 1rpx solid #d5d5d5;
+          background-color: rgb(252, 252, 252);
+          text-align: right;
+          padding-bottom: 10rpx;
+          .u-textarea {
+            text-align: left;
+            padding: 20rpx;
+            height: 280rpx;
+            background: #fcfcfc;
+            border: none;
+            .u-textarea__field {
+              height: auto !important;
+            }
+            .uni-textarea-placeholder {
+              font-size: 24rpx;
+              line-height: 38rpx;
+              color: $remark-color;
+              word-break: break-all;
+            }
+          }
+          .iconfontBox {
+            padding-right: 20rpx;
+            margin-top: 20rpx;
+            height: 40rpx;
+          }
+          .icon-guanbi {
+            font-size: 30rpx;
+            color: #bbbbbb;
+          }
+        }
+
+        .recognizeResult {
+          max-height: 400rpx;
+          overflow: scroll;
+          margin: 30rpx 0 -30rpx 0;
+          .u-input {
+            padding-top: 20rpx;
+            .u-input__label {
+              width: 50%;
+            }
+          }
+        }
+      }
+    }
+  }
+  .warmPrompt {
+    padding: 30rpx 30rpx 40rpx 30rpx;
+    &.center {
+      text-align: center;
+    }
+  }
+}

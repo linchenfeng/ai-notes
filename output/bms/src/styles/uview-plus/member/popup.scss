@@ -1,0 +1,36 @@
+.u-popup {
+  .u-modal__title {
+    color: #202020 !important;
+    font-weight: normal !important;
+  }
+  .slot-content,
+  .u-modal__content {
+    width: 100%;
+    color: #646566;
+    text-align: center;
+    font-size: 28rpx;
+    box-sizing: border-box;
+  }
+
+  .u-modal__button-group {
+    padding: 0 40rpx 40rpx;
+    gap: 40rpx;
+    .u-modal__button-group__wrapper {
+      height: 80rpx;
+      border-radius: 10rpx !important;
+    }
+    .u-modal__button-group__wrapper--cancel {
+      border: 1px solid #ededed;
+      // margin-right: 40rpx;
+    }
+    .u-modal__button-group__wrapper--confirm {
+      background-color: #138bec;
+      .u-modal__button-group__wrapper__text {
+        color: #fff !important;
+      }
+    }
+  }
+  .u-line {
+    display: none;
+  }
+}

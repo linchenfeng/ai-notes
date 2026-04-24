@@ -23,12 +23,10 @@
           baseInfo.cardLastFourNo
         }}</el-descriptions-item>
         <el-descriptions-item :label="$t('卡状态')">{{
-          getValueByKey(baseInfo.cardStatus, "vccCardStatus") ||
-          baseInfo.cardStatus
+          getValueByKey(baseInfo.cardStatus, "vccCardStatus")
         }}</el-descriptions-item>
         <el-descriptions-item :label="$t('申请状态')">{{
-          getValueByKey(baseInfo.applyStatus, "vccApplyStatus") ||
-          baseInfo.applyStatus
+          getValueByKey(baseInfo.applyStatus, "vccApplyStatus")
         }}</el-descriptions-item>
         <el-descriptions-item :label="$t('VCC授信额度(元)')">{{
           baseInfo.creditAmt | moneyFormat

@@ -1,0 +1,116 @@
+/*
+ * @Author       : may.ruan
+ * @Date         : 2023-01-06 14:37:27
+ * @LastEditors  : Longcan.Yang
+ * @LastEditTime : 2025-11-07 09:49:34
+ * @Description  :  表单输入框样式重置(会员中心)
+ */
+// .wap-member {
+.u-form {
+  .u-form-item {
+    margin-bottom: 34rpx;
+    .u-form-item__body {
+      align-items: self-start;
+      padding: 0 0 0 14rpx;
+      .u-form-item__body__left {
+        .u-form-item__body__left__content__label {
+          color: $sub-color;
+          font-size: 28rpx;
+          margin-right: 20rpx;
+          line-height: 48rpx;
+        }
+        .u-form-item__body__left__content__required {
+          position: static;
+          width: 10rpx;
+          margin-right: 4rpx;
+          margin-left: -14rpx;
+          font-size: 28rpx;
+        }
+      }
+      .u-form-item__body__right {
+        .u-form-item__body__right__content {
+          align-items: self-start;
+        }
+        .item__body__right__content__icon {
+          margin: 8rpx 0 0 10rpx;
+          .rightImg {
+            width: 14rpx;
+            height: 24rpx;
+          }
+        }
+        .form-readonly {
+          width: 100%;
+          color: $remark-color;
+          text-align: right;
+          font-size: 28rpx;
+        }
+        .form-item-text {
+          text-align: right;
+          color: #999;
+          line-height: 48rpx;
+          width: 100%;
+          word-break: break-all;
+        }
+        .u-input {
+          &.u-border {
+            border: none;
+            padding: 0 !important;
+          }
+          .u-input__content__field-wrapper__field {
+            text-align: right !important;
+            font-size: 28rpx !important;
+          }
+          .uni-input-input:disabled {
+            color: $remark-color;
+          }
+        }
+        .u-textarea {
+          padding: 0;
+          margin-bottom: 40rpx;
+          .u-textarea__field {
+            height: 72rpx !important;
+            text-align: right;
+            font-size: 28rpx;
+            color: #333;
+          }
+          .input-placeholder {
+            text-align: right;
+            font-size: 28rpx;
+            // margin-top: 10rpx;
+          }
+
+          .uni-textarea-textarea {
+            word-break: break-all;
+          }
+          .u-textarea__count {
+            bottom: -44rpx;
+          }
+        }
+      }
+    }
+  }
+
+  .text-align-left {
+    .u-input .u-input__content__field-wrapper__field {
+      text-align: left !important;
+      font-size: 28rpx !important;
+    }
+  }
+  // form表单中只读样式 value置为灰色
+  .u-input__control[readonly] {
+    color: $sub-color;
+  }
+}
+.vertical-form-item {
+  .u-form-item__body {
+    flex-direction: column !important;
+    width: 100%;
+  }
+  .u-form-item__body__left__content__label {
+    margin-bottom: 10rpx;
+  }
+  .u-form-item__body__right__content__slot {
+    justify-content: flex-start !important;
+  }
+}
+// }

@@ -1,0 +1,334 @@
+<!--
+ * @Author       : Charon.Lin
+ * @Date         : 2025-12-03 14:03:39
+ * @LastEditors  : Charon.Lin
+ * @LastEditTime : 2025-12-05 16:06:38
+ * @Description  : 项目-业务审核-融资申请审核 /member/project/audit/loanApply
+-->
+<template>
+  <view>
+    <NavBar></NavBar>
+    <view class="business-access">
+      <view class="search-box">
+        <up-search
+          v-model="search.data.approvalQuery"
+          v-insert-clear:[search.data.approvalQuery]="resetSearch"
+          :clearabled="false"
+          :search-icon-size="0"
+          placeholder="请输入客户名称/客户经理/业务主管"
+          :show-action="true"
+          :action-style="{ color: '#395fee' }"
+          @search="searchProjectPage"
+          @custom="searchProjectPage"
+        ></up-search>
+      </view>
+      <up-sticky bg-color="#fff">
+        <view class="head-tabs" :class="`selectTab${tabIndex}`">
+          <view class="tabs-line"></view>
+          <u-tabs
+            :list="vm.tabsList"
+            line-color="#138BEC"
+            :active-style="{
+              color: '#138BEC',
+              fontSize: '32rpx'
+            }"
+            :inactive-style="{
+              color: '#666666',
+              fontSize: '28rpx'
+            }"
+            line-width="50"
+            line-height="4"
+            @click="selectTab"
+          ></u-tabs>
+        </view>
+      </up-sticky>
+      <view class="content">
+        <uni-list v-if="vm.fintLoaList && vm.fintLoaList.length">
+          <uni-list-item v-for="item in vm.fintLoaList" :key="item.refcode" class="list-item" @tap="viewDetail(item.refcode)">
+            <u-cell-group class="listData" :border="false">
+              <view class="financingNo">
+                <u-row>
+                  <u-col :span="8">
+                    <view class="text ellipsis">{{ item.orgname }}</view>
+                  </u-col>
+                  <u-col :span="4">
+                    <view class="status-box">
+                      <view class="status" :class="`status${item.loanStatus}`">
+                        {{ getValueByKey(item.loanStatus, 'fintLoanStatus') }}
+                      </view>
+                    </view>
+                  </u-col>
+                </u-row>
+              </view>
+              <u-cell :stop="false" title="授信产品" :value="getValueByKey(item.creditProducts, 'fintCreditPro')" :border="false" />
+              <u-cell :stop="false" title="业务申请编号" :value="item.businessNo" :border="false" />
+              <u-cell :stop="false" title="申请日期" :value="item.applyDate ? dateFormat(item.applyDate, 1) : ''" :border="false" />
+              <u-cell :stop="false" title="客户经理" :value="item.applyUsername" :border="false" />
+              <u-cell :stop="false" title="业务主管" :value="item.superiorUsername" :border="false" />
+            </u-cell-group>
+            <view class="line"></view>
+          </uni-list-item>
+          <view v-if="finished" class="list-is-finished">已经到底了</view>
+        </uni-list>
+        <u-empty v-else mode="data" :text="'暂无数据'" :icon="empty" width="300" height="244"></u-empty>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script setup lang="ts">
+import NavBar from '@/layout/NavBar.vue'
+import { dateFormat } from '@/utils/format'
+import apiLoanApply from '@/api/member/project/audit/api.loanApply'
+import { onReachBottom, onShow, onPullDownRefresh } from '@dcloudio/uni-app'
+import { FintLoaList, Search } from '@/interfaces/member/project/audit/loanApply'
+import empty from '@/assets/empty/empty.png'
+import { useRouter } from '@/uni-simple-router'
+import { encodeBase64 } from '@/utils/crypto'
+import { getValueByKey } from '@/utils/constant'
+const router = useRouter()
+let finished = ref(false) // 数据是否已加载完
+let tabIndex = ref(0) // 当前选中的持仓状态序号
+let tabsList = [
+  {
+    name: '待审批'
+  },
+  {
+    name: '已审批'
+  }
+]
+// 用于搜索请求的数据
+const search = reactive<Search>({
+  data: {
+    approvalQuery: '',
+    processedFlag: '0'
+  },
+  pageNum: 1,
+  pageSize: 10
+})
+let fintLoaList: FintLoaList[] = []
+const vm = reactive({
+  fintLoaList: fintLoaList,
+  tabsList: tabsList
+})
+let totalCount = ref(0)
+/**
+ * @Author: LongCan.Yang
+ * @Date: 2024-07-03 19:59:16
+ * @description: 获取笔数
+ */
+const getApprovalCount = () => {
+  const data = {
+    approvalQuery: search.data.approvalQuery
+  }
+  apiLoanApply.getApprovalCount(data).then(res => {
+    vm.tabsList = [
+      {
+        name: '待审批' + '(' + res.data.approvalCount + ')'
+      },
+      {
+        name: '已审批' + '(' + res.data.approvedCount + ')'
+      }
+    ]
+  })
+}
+/**
+ * @Author: LongCan.Yang
+ * @Date: 2024-06-25 15:14:44
+ * @description: 获取列表
+ */
+const findApprovalPage = () => {
+  apiLoanApply.findApprovalPage(search).then(res => {
+    totalCount.value = res.totalCount as number
+    if (res.data.fintLoaList && res.data.fintLoaList.length) {
+      vm.fintLoaList.push(...res.data.fintLoaList)
+    }
+    if (totalCount.value === vm.fintLoaList.length && totalCount.value > 0) {
+      finished.value = true
+    }
+    getApprovalCount()
+  })
+}
+/**
+ * @Author: LongCan.Yang
+ * @Date: 2024-06-25 15:31:01
+ * @description: 点击搜索
+ */
+const searchProjectPage = () => {
+  vm.fintLoaList = []
+  search.pageNum = 1
+  finished.value = false
+  findApprovalPage()
+}
+const resetSearch = () => {
+  search.data.approvalQuery = ''
+  searchProjectPage()
+}
+/**
+ * @Author: LongCan.Yang
+ * @Date: 2024-06-25 15:31:01
+ * @description: 切换tab
+ */
+const selectTab = item => {
+  tabIndex.value = item.index
+  switch (item.index) {
+    case 0:
+      search.data.processedFlag = '0'
+      break
+    case 1:
+      search.data.processedFlag = '1'
+      break
+    default:
+      break
+  }
+  searchProjectPage()
+}
+/**
+ * @Author: LongCan.Yang
+ * @Date: 2024-06-25 15:32:39
+ * @description: 查看详情
+ */
+const viewDetail = (refcode: number) => {
+  if (tabIndex.value === 0) {
+    router.push(`/member/project/audit/loanApply/audit/${encodeBase64(refcode)}`)
+  } else {
+    router.push(`/member/project/audit/loanApply/detail/${encodeBase64(refcode)}`)
+  }
+}
+/**
+ * @Author: LongCan.Yang
+ * @Date: 2023-09-22 15:29:16
+ * @description: 上划加载更多数据
+ */
+onReachBottom(() => {
+  if (search.pageNum < Math.ceil(totalCount.value / search.pageSize)) {
+    search.pageNum++
+    findApprovalPage()
+  }
+})
+onPullDownRefresh(() => {
+  searchProjectPage()
+  setTimeout(() => {
+    uni.stopPullDownRefresh()
+  }, 600)
+})
+onShow(() => {
+  searchProjectPage()
+})
+</script>
+
+<style lang="scss" scoped>
+.business-access {
+  .search-box {
+    padding-bottom: 0;
+  }
+  :deep(.u-sticky) {
+    top: 44px !important;
+  }
+  .head-tabs {
+    margin-top: 10rpx;
+    position: relative;
+    .tabs-line {
+      position: absolute;
+      width: 100%;
+      height: 1rpx;
+      background-color: #dedede;
+      bottom: 4rpx;
+    }
+    :deep(.u-tabs) {
+      // .u-tabs__wrapper__nav {
+      //   // justify-content: space-around;
+      // }
+      .u-tabs__wrapper__nav__item {
+        padding: 0;
+        width: 50%;
+        box-sizing: border-box;
+      }
+    }
+    &.selectTab0 {
+      :deep(.u-tabs) {
+        .u-tabs__wrapper__nav__line {
+          transform: translate(144rpx) !important;
+        }
+      }
+    }
+    &.selectTab1 {
+      :deep(.u-tabs) {
+        .u-tabs__wrapper__nav__line {
+          transform: translate(520rpx) !important;
+        }
+      }
+    }
+    &.selectTab2 {
+      :deep(.u-tabs) {
+        .u-tabs__wrapper__nav__line {
+          transform: translate(602rpx) !important;
+        }
+      }
+    }
+  }
+  .line {
+    margin-top: 20rpx;
+    width: 100%;
+    height: 20rpx;
+    background: #f6f6f6;
+  }
+  .list-item {
+    &:last-of-type {
+      .line {
+        // display: none;
+        height: 2rpx;
+      }
+    }
+  }
+  :deep(.listData) {
+    // border-bottom: 1rpx solid #dedede;
+    .u-cell {
+      padding-bottom: 20rpx;
+      .u-cell__value {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+    .financingNo {
+      margin-bottom: 20rpx;
+      .u-row {
+        height: 48rpx;
+        .text {
+          font-size: 32rpx;
+          font-weight: bold;
+        }
+        .status-box {
+          display: flex;
+          justify-content: flex-end;
+          .status {
+            border: 1rpx solid $warning;
+            color: $warning;
+            border-radius: 5rpx;
+            padding: 10rpx 16rpx;
+            text-align: center;
+            font-size: 26rpx;
+            &.status9 {
+              border: 1rpx solid $u-success;
+              color: $u-success;
+            }
+            &.status3 {
+              border: 1rpx solid $u-error;
+              color: $u-error;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+.apply {
+  color: #fff;
+  font-size: 14px;
+}
+.icon-shenqing {
+  color: #fff;
+  font-size: 14px;
+}
+</style>

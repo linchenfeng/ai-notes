@@ -1,0 +1,30 @@
+@mixin mixin-display($display) {
+  display: $display !important;
+}
+
+@mixin mixin-textAlign($align) {
+  text-align: $align !important;
+}
+
+@mixin mixin-flotAlign($align) {
+  float: $align !important;
+}
+
+@mixin mixin-clearfix() {
+  clear: both;
+
+  &:after {
+    clear: both;
+    content: '.';
+    display: block;
+    height: 0;
+    line-height: 0;
+    overflow: hidden;
+  }
+}
+
+// 左右间距
+@mixin mixin-spaced() {
+  margin-left: $spaced;
+  margin-right: $spaced;
+}

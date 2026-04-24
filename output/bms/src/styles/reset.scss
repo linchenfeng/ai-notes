@@ -1,0 +1,127 @@
+@charset "utf-8";
+
+html,
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+p,
+blockquote,
+pre,
+hr,
+figure,
+table,
+caption,
+th,
+td,
+form,
+fieldset,
+legend,
+input,
+button,
+textarea,
+menu,
+span,
+div {
+  margin: 0;
+  padding: 0;
+  z-index: inherit;
+  -webkit-tap-highlight-color: transparent;
+  word-wrap: break-word;
+  word-break: normal;
+}
+
+header,
+footer,
+section,
+article,
+aside,
+nav,
+hgroup,
+address,
+figure,
+figcaption,
+menu,
+details {
+  display: block;
+  word-wrap: break-word;
+  word-break: normal;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+caption,
+th {
+  text-align: left;
+  font-weight: normal;
+}
+
+input {
+  outline: none;
+}
+
+i,
+cite,
+em,
+var,
+address,
+dfn {
+  font-style: normal;
+}
+
+[hidefocus],
+summary {
+  outline: 0;
+}
+
+li {
+  list-style: none;
+}
+
+a {
+  color: #333;
+}
+
+a,
+a:hover {
+  text-decoration: none;
+}
+
+img {
+  border: 0;
+  vertical-align: middle;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+li {
+  list-style: none;
+}
+
+body,
+html {
+  font-family: $font-family;
+  color: $default-color;
+  margin: 0;
+  padding: 0;
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+uni-page-refresh {
+  position: absolute;
+}
