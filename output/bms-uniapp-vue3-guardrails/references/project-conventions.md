@@ -34,6 +34,8 @@
 
 - 功能增改流程：`feature-workflow.md`
 - 页面开发规范：`page-development-rules.md`
+- 申请页规范：`apply-page-rules.md`
+- 详情页规范：`detail-page-rules.md`
 - API 与类型规范：`api-and-types-rules.md`
 - 组件复用规范：`component-reuse-rules.md`
 - 列表页专项：`list-page-rules.md`

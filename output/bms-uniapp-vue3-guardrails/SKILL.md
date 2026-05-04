@@ -15,6 +15,8 @@ description: 用于约束同级 `bms` 项目中的代码生成与代码修改。
 
 - 新增或调整功能时，读 [references/feature-workflow.md](references/feature-workflow.md)
 - 新增或改动页面时，读 [references/page-development-rules.md](references/page-development-rules.md)
+- 新增或改动申请页时，读 [references/apply-page-rules.md](references/apply-page-rules.md)
+- 新增或改动详情页时，读 [references/detail-page-rules.md](references/detail-page-rules.md)
 - 新增或改动接口、请求、类型时，读 [references/api-and-types-rules.md](references/api-and-types-rules.md)
 - 新增或复用组件时，读 [references/component-reuse-rules.md](references/component-reuse-rules.md)
 - 生成移动端列表页前，读 [references/list-page-rules.md](references/list-page-rules.md)
