@@ -11,8 +11,7 @@ Day 34：文档切分脚本（最小可运行版）
 
 运行示例：
 source ~/.zshrc
-python3 code/day34_split_docs.py
-
+c
 调整 chunk 大小与 overlap：
 source ~/.zshrc
 python3 code/day34_split_docs.py --chunk-size 220 --overlap 40

@@ -22,6 +22,7 @@ python code/day40_rag_qa.py --query "embedding 是什么？" --dry-run
 
 import argparse
 import json
+import re
 from dataclasses import asdict
 from pathlib import Path
 from typing import Any
@@ -86,6 +87,7 @@ def build_output_payload(
     query: str,
     top_k: int,
     model_name: str,
+    generation_mode: str,
     answer: str,
     prompt: str,
     results: list[RetrievalResult],
@@ -98,6 +100,7 @@ def build_output_payload(
         "query": query,
         "top_k": top_k,
         "model_name": model_name,
+        "generation_mode": generation_mode,
         "answer": answer,
         "context_count": len(results),
         "sources": [
@@ -114,6 +117,86 @@ def build_output_payload(
         "results": [asdict(result) for result in results],
         "prompt": prompt,
     }
+
+
+def extract_query_terms(query: str) -> list[str]:
+    """
+    从问题里提取一组轻量关键词，供离线兜底回答时做匹配。
+    """
+
+    raw_terms = re.findall(r"[\u4e00-\u9fff]{1,}|[A-Za-z0-9_.:-]+", query.lower())
+    stop_terms = {"什么", "什么是", "是", "的", "了", "吗", "呢", "请问", "一下"}
+
+    terms: list[str] = []
+    for term in raw_terms:
+        cleaned = term.strip()
+        if not cleaned or cleaned in stop_terms:
+            continue
+        if cleaned not in terms:
+            terms.append(cleaned)
+    return terms
+
+
+def split_candidate_sentences(text: str) -> list[str]:
+    """
+    把检索文本拆成适合做抽取式回答的候选句子。
+    """
+
+    normalized = text.replace("\r", "")
+    pieces = re.split(r"[。！？\n]+", normalized)
+
+    candidates: list[str] = []
+    for piece in pieces:
+        sentence = piece.strip().strip("#*- ")
+        if len(sentence) < 8:
+            continue
+        candidates.append(sentence)
+    return candidates
+
+
+def build_fallback_answer(query: str, results: list[RetrievalResult]) -> str:
+    """
+    当本地模型不可用时，基于检索结果做一个最小可用的抽取式回答。
+    """
+
+    terms = extract_query_terms(query)
+    scored_sentences: list[tuple[float, str, RetrievalResult]] = []
+
+    is_definition_query = "什么是" in query or "是什么" in query
+
+    for result in results:
+        rank_bonus = max(0.0, 1.0 - (result.rank - 1) * 0.15)
+        title_bonus = 0.5 if any(term in result.title.lower() for term in terms) else 0.0
+
+        for index, sentence in enumerate(split_candidate_sentences(result.chunk_text)):
+            overlap = sum(1 for term in terms if term in sentence.lower())
+            if overlap == 0 and result.rank > 1:
+                continue
+
+            length_bonus = 0.2 if 12 <= len(sentence) <= 120 else 0.0
+            position_bonus = 0.25 if index < 2 else 0.0
+            definition_bonus = 0.0
+            if is_definition_query and any(
+                marker in sentence for marker in ("全称是", "意思是", "是一种", "是指", "它的基本流程是")
+            ):
+                definition_bonus = 3.0
+
+            score = overlap * 2.0 + rank_bonus + title_bonus + length_bonus + position_bonus + definition_bonus
+            scored_sentences.append((score, sentence, result))
+
+    if not scored_sentences:
+        top_result = results[0]
+        for sentence in split_candidate_sentences(top_result.chunk_text):
+            return f"{sentence}。依据：检索结果《{top_result.title}》。"
+        return "根据当前检索到的资料，暂时无法确认。"
+
+    scored_sentences.sort(key=lambda item: item[0], reverse=True)
+    _, best_sentence, best_result = scored_sentences[0]
+
+    answer = best_sentence
+    if not answer.endswith(("。", "！", "？")):
+        answer = f"{answer}。"
+    return f"{answer}依据：检索结果《{best_result.title}》。"
 
 
 def print_answer(answer: str, results: list[RetrievalResult]) -> None:
@@ -240,17 +323,26 @@ def main() -> None:
         print(json.dumps(payload, ensure_ascii=False, indent=2))
         return
 
-    answer = get_completion(
-        prompt,
-        system_prompt=DEFAULT_SYSTEM_PROMPT,
-        model_name=args.model_name,
-        temperature=args.temperature,
-    )
+    used_model_name = args.model_name
+    generation_mode = "ollama_chat"
+    try:
+        answer = get_completion(
+            prompt,
+            system_prompt=DEFAULT_SYSTEM_PROMPT,
+            model_name=args.model_name,
+            temperature=args.temperature,
+        )
+    except RuntimeError as exc:
+        used_model_name = "offline_extract_fallback"
+        generation_mode = "offline_extract_fallback"
+        answer = build_fallback_answer(args.query, results)
+        print(f"提示：{exc}，已自动回退到基于检索结果的离线回答。\n")
 
     payload = build_output_payload(
         query=args.query,
         top_k=args.top_k,
-        model_name=args.model_name,
+        model_name=used_model_name,
+        generation_mode=generation_mode,
         answer=answer,
         prompt=prompt,
         results=results,
